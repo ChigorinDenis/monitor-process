@@ -1,0 +1,121 @@
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import './GanntTable.scss';
+import store from "../../store";
+import engine from "../../fakeEngine";
+import { addTask } from "../../reducers/taskReducer";
+import { selectTask } from "../../reducers/uiReducer";
+
+const cols = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+
+const hoursToMinutes = (time) => {
+  const [hours, minutes] = time.split('.').map(Number);
+  return hours * 60 + minutes;
+}
+
+const calcProgress = (duration, progress) => ((hoursToMinutes(progress) / hoursToMinutes(duration)) * 100);
+
+const buildRow = (data) => {
+  return (
+    data.map((task) => {
+      const {
+        id,
+        duration,
+        timeStart,
+        operation,
+        progress
+      } = task;
+      return (
+        <>
+          <tr key={id}>
+            <td>{operation}</td>
+            <td>{timeStart}</td>
+            <td>{duration}</td>
+            {
+            cols.map((z, index) => {
+              return buildCol(timeStart, duration, progress, index, id);
+            })
+            }
+          </tr>
+        </>
+      )
+    })   
+  )
+}
+const buildCol = (timeStart, duration, progress, i, id) => {
+  const [hourStart, minuteStart] = timeStart.split('.').map(Number);
+  if (hourStart!= i ) {
+    return (
+      <td key={i}></td>
+    );
+  }
+  
+  const progressWidth = Math.round(calcProgress(duration, progress));
+  return (
+    <td key={i} style={{position:'relative'}}>
+      {buildTask(duration, minuteStart, `${progressWidth}%`, id)}
+    </td>
+  );
+}
+const runTask = (id) => () => {
+  store.dispatch(selectTask({ id }));
+};
+
+const buildTask = (duration, minuteStart, progress, id) => {
+  const [hourDuration, minuteDuration] = duration.split('.').map(Number);
+  const minuteDurationPer = `${((minuteDuration / 60) * 100) + (hourDuration * 100)}%`;
+  const num = `${hourDuration - 1}px`;
+  const width = `calc(${minuteDurationPer} + ${num})`;
+  const left = `${(minuteStart / 60) * 100}%`;
+  return (
+    <div className="task" style={{width, left}} onClick={runTask(id)}>
+      <div className="task__progress" style={{width: progress}}></div>
+      <span className="task__badge">{progress}</span>
+    </div>
+  );
+}
+
+const GanntTable = () => {
+  const dispatch = useDispatch();
+  const tasks = useSelector((state) => state.tasks);
+  useEffect(() => {
+    engine.run();
+    const data = engine.getTasks();
+    data.map((task) => (dispatch(addTask(task))));
+  },[]);
+  
+  return (
+    <>
+      <div className="gannt__wrapper">
+        <table className="gannt__table">
+          <thead>
+            <tr>
+              <th className="sticky" style={{width: '200px'}}>Операция</th>
+              <th style={{width: '100px'}}>Время начала</th>
+              <th style={{width: '100px'}}>Длительность</th>
+              <th>00.00</th>
+              <th>01.00</th>
+              <th>02.00</th>
+              <th>03.00</th>
+              <th>04.00</th>
+              <th>05.00</th>
+              <th>06.00</th>
+              <th>07.00</th>
+              <th>08.00</th>
+              <th>09.00</th>
+              <th>10.00</th>
+              <th>11.00</th>
+              <th>12.00</th>
+            </tr>
+          </thead>
+          <tbody>
+            {buildRow(tasks)}
+          </tbody>
+        </table>
+      </div>
+    </>
+    
+  )
+}
+
+export default GanntTable;
