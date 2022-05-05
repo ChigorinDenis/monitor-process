@@ -61,7 +61,7 @@ export default function Main() {
                 </ListItemIcon>
                 <ListItemText primary="Планирование"  style={selectedTab ==='plan' ? {'color': '#10B981'}: {'color': '#f5f5f5'}}/>
               </ListItemButton>
-              <ListItemButton onClick={handleTab('statistic')}>>
+              <ListItemButton onClick={handleTab('statistic')}>
                 <ListItemIcon>
                   <BarChartIcon style={selectedTab ==='statistic' ? {'color': '#10B981'}: {'color': '#f5f5f5'}}/>
                 </ListItemIcon>

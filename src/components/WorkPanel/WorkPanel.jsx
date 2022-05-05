@@ -45,7 +45,7 @@ const WorkPanel = () => {
             variant='outlined'
             startIcon={<StopCircleIcon />}
             size='small'
-            color='secondary'
+            color='error'
             onClick={() => {
               engine.postStopTask(selectedTask.id);
             }}

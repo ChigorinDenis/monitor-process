@@ -5,75 +5,10 @@ import store from "../../store";
 import engine from "../../fakeEngine";
 import { addTask } from "../../reducers/taskReducer";
 import { selectTask } from "../../reducers/uiReducer";
+import ContexMenu from "../ContexMenu";
 
 const cols = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 
-const hoursToMinutes = (time) => {
-  const [hours, minutes] = time.split('.').map(Number);
-  return hours * 60 + minutes;
-}
-
-const calcProgress = (duration, progress) => ((hoursToMinutes(progress) / hoursToMinutes(duration)) * 100);
-
-const buildRow = (data) => {
-  return (
-    data.map((task) => {
-      const {
-        id,
-        duration,
-        timeStart,
-        operation,
-        progress
-      } = task;
-      return (
-        <>
-          <tr key={id}>
-            <td>{operation}</td>
-            <td>{timeStart}</td>
-            <td>{duration}</td>
-            {
-            cols.map((z, index) => {
-              return buildCol(timeStart, duration, progress, index, id);
-            })
-            }
-          </tr>
-        </>
-      )
-    })   
-  )
-}
-const buildCol = (timeStart, duration, progress, i, id) => {
-  const [hourStart, minuteStart] = timeStart.split('.').map(Number);
-  if (hourStart!= i ) {
-    return (
-      <td key={i}></td>
-    );
-  }
-  
-  const progressWidth = Math.round(calcProgress(duration, progress));
-  return (
-    <td key={i} style={{position:'relative'}}>
-      {buildTask(duration, minuteStart, `${progressWidth}%`, id)}
-    </td>
-  );
-}
-const runTask = (id) => () => {
-  store.dispatch(selectTask({ id }));
-};
-
-const buildTask = (duration, minuteStart, progress, id) => {
-  const [hourDuration, minuteDuration] = duration.split('.').map(Number);
-  const minuteDurationPer = `${((minuteDuration / 60) * 100) + (hourDuration * 100)}%`;
-  const num = `${hourDuration - 1}px`;
-  const width = `calc(${minuteDurationPer} + ${num})`;
-  const left = `${(minuteStart / 60) * 100}%`;
-  return (
-    <div className="task" style={{width, left}} onClick={runTask(id)}>
-      <div className="task__progress" style={{width: progress}}></div>
-      <span className="task__badge">{progress}</span>
-    </div>
-  );
-}
 
 const GanntTable = () => {
   const dispatch = useDispatch();
@@ -83,6 +18,98 @@ const GanntTable = () => {
     const data = engine.getTasks();
     data.map((task) => (dispatch(addTask(task))));
   },[]);
+
+  const [contextMenu, setContextMenu] = React.useState(null);
+
+  const handleContextMenu = (event) => {
+    event.preventDefault();
+    setContextMenu(
+      contextMenu === null
+        ? {
+            mouseX: event.clientX - 2,
+            mouseY: event.clientY - 4,
+          }
+        : // repeated contextmenu when it is already open closes it with Chrome 84 on Ubuntu
+          // Other native context menus might behave different.
+          // With this behavior we prevent contextmenu from the backdrop to re-locale existing context menus.
+          null,
+    );
+  };
+
+  const handleClose = () => {
+    setContextMenu(null);
+  };
+  const hoursToMinutes = (time) => {
+    const [hours, minutes] = time.split('.').map(Number);
+    return hours * 60 + minutes;
+  }
+  
+  const calcProgress = (duration, progress) => ((hoursToMinutes(progress) / hoursToMinutes(duration)) * 100);
+  
+  const buildRow = (data) => {
+    return (
+      data.map((task) => {
+        const {
+          id,
+          duration,
+          timeStart,
+          operation,
+          progress
+        } = task;
+        return (
+          <>
+            <tr key={id}>
+              <td>{operation}</td>
+              <td>{timeStart}</td>
+              <td>{duration}</td>
+              {
+              cols.map((z, index) => {
+                return buildCol(timeStart, duration, progress, index, id);
+              })
+              }
+            </tr>
+          </>
+        )
+      })   
+    )
+  }
+  const buildCol = (timeStart, duration, progress, i, id) => {
+    const [hourStart, minuteStart] = timeStart.split('.').map(Number);
+    if (hourStart!= i ) {
+      return (
+        <td key={i}></td>
+      );
+    }
+    
+    const progressWidth = Math.round(calcProgress(duration, progress));
+    return (
+      <td key={i} style={{position:'relative'}}>
+        {buildTask(duration, minuteStart, `${progressWidth}%`, id)}
+      </td>
+    );
+  }
+  const runTask = (id) => () => {
+    store.dispatch(selectTask({ id }));
+  };
+  
+  const buildTask = (duration, minuteStart, progress, id) => {
+    const [hourDuration, minuteDuration] = duration.split('.').map(Number);
+    const minuteDurationPer = `${((minuteDuration / 60) * 100) + (hourDuration * 100)}%`;
+    const num = `${hourDuration - 1}px`;
+    const width = `calc(${minuteDurationPer} + ${num})`;
+    const left = `${(minuteStart / 60) * 100}%`;
+    return (
+      <div 
+        className="task"
+        style={{width, left}}
+        onClick={runTask(id)}
+        onContextMenu={handleContextMenu}
+      >
+        <div className="task__progress" style={{width: progress}}></div>
+        <span className="task__badge">{progress}</span>
+      </div>
+    );
+  }
   
   return (
     <>
@@ -113,6 +140,7 @@ const GanntTable = () => {
           </tbody>
         </table>
       </div>
+      <ContexMenu contextMenu={contextMenu} handleClose={handleClose} />
     </>
     
   )
