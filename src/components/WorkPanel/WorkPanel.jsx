@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography';
 import { Button, Box, ToggleButtonGroup, ToggleButton } from "@mui/material";
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopCircleIcon from '@mui/icons-material/StopCircle';
+import  TaskTooltip  from '../Tooltip';
 import engine from "../../fakeEngine";
 
 const WorkPanel = () => {
@@ -29,6 +30,7 @@ const WorkPanel = () => {
           Испытания
         </Typography>
         <Box>
+          <TaskTooltip>
           <Button
             variant='contained'
             startIcon={<PlayArrowIcon />}
@@ -41,6 +43,7 @@ const WorkPanel = () => {
           >
             Запуск
           </Button>
+          </TaskTooltip>
           <Button
             variant='outlined'
             startIcon={<StopCircleIcon />}

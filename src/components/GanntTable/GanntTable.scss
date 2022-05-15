@@ -38,9 +38,17 @@
       border-right-color: gray;
     }
   }
+  .over__task {
+    position: absolute;
+    top:50%;
+    transform: translateY(-50%);
+    height: 20px;
+    border-radius: 6px;
+    overflow: hidden;
+    background-color: #f44336
+  }
   .task {
     position: absolute;
-    left:0;
     top:50%;
     transform: translateY(-50%);
     height: 20px;

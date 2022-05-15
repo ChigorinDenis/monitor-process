@@ -78,14 +78,16 @@ export default function Header() {
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
         <Toolbar>
+          <img src="img/logo.jpg" alt="logo" style={{ width: '50px', height: '50px', marginRight: '10px'}}/>
           <Typography
             variant="h6"
             noWrap
             component="div"
             sx={{ display: { xs: 'none', sm: 'block' } }}
           >
-            PROGSS
+            РКЦ "Прогресс"
           </Typography>
+          
           <Box sx={{ flexGrow: 1 }} />
           {auth.isAuth && <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <IconButton

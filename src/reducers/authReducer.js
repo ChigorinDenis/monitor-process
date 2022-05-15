@@ -4,16 +4,42 @@ const initialState = {
   users: [
     {
       id: 1,
-      fullname: 'testname',
-      email: 'test@mail.com',
-      password: 'test'
-    }
+      fio: 'test name',
+      username: 'testname',
+      password: 'test',
+      post: 'Инженер',
+      roles: ['админ']
+    },
+    {
+      id: 2,
+      fio: 'Королев Сергей Павлович',
+      username: 'korolev',
+      password: '111',
+      post: 'главный конструктор',
+      roles: ['админ', 'главный конструктор']
+    },
+    {
+      id: 3,
+      fio: 'Билл Гейтс',
+      username: 'billgates',
+      password: '111',
+      post: 'Инженер',
+      roles: ['пользователь']
+    },
+    {
+      id: 4,
+      fio: 'Неделин Митрофан',
+      username: 'nedelin',
+      password: '111',
+      post: 'руководитель работ',
+      roles: ['руководитель']
+    },
   ],
   isAuth: false,
 };
 
-function checkUser(users, email, password) {
-  const user = users.find((item) => item.email === email);
+function checkUser(users, username, password) {
+  const user = users.find((item) => item.username === username);
   if (!user) return false;
   if (user.password === password) {
     return true;
@@ -26,8 +52,8 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     logIn : (state, { payload }) => {
-      const { email, password } = payload;
-      if (checkUser(state.users, email, password)) {
+      const { username, password } = payload;
+      if (checkUser(state.users, username, password)) {
         return {
           ...state,
           isAuth: true
@@ -35,15 +61,29 @@ export const authSlice = createSlice({
       }
       return state;  
     },
-    logOut : (state, { payload }) => {
+    logOut : (state) => {
       return {
         ...state,
         isAuth: false,
       }  
     },
+    addUser : (state, { payload }) => {
+      const { users } = state;
+      return {
+        ...state,
+        users: [...users, payload]
+      }  
+    },
+    removeUser : (state, { payload }) => {
+      const { users } = state;
+      return {
+        ...state,
+        users: users.filter((user) => user.id != payload.id)
+      }  
+    },
   }
 });
 
-export const { logIn, logOut } = authSlice.actions;
+export const { logIn, logOut, addUser, removeUser } = authSlice.actions;
 
 export default authSlice.reducer;

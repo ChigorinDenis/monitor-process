@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import  TaskTooltip  from '../Tooltip';
 import './GanntTable.scss';
 import store from "../../store";
 import engine from "../../fakeEngine";
@@ -29,9 +30,7 @@ const GanntTable = () => {
             mouseX: event.clientX - 2,
             mouseY: event.clientY - 4,
           }
-        : // repeated contextmenu when it is already open closes it with Chrome 84 on Ubuntu
-          // Other native context menus might behave different.
-          // With this behavior we prevent contextmenu from the backdrop to re-locale existing context menus.
+        : 
           null,
     );
   };
@@ -79,15 +78,15 @@ const GanntTable = () => {
       return (
         <td key={i}></td>
       );
-    }
-    
+    } 
     const progressWidth = Math.round(calcProgress(duration, progress));
     return (
-      <td key={i} style={{position:'relative'}}>
+      <td key={`col${i}`} style={{position:'relative'}}>
         {buildTask(duration, minuteStart, `${progressWidth}%`, id)}
       </td>
     );
   }
+
   const runTask = (id) => () => {
     store.dispatch(selectTask({ id }));
   };
@@ -97,17 +96,24 @@ const GanntTable = () => {
     const minuteDurationPer = `${((minuteDuration / 60) * 100) + (hourDuration * 100)}%`;
     const num = `${hourDuration - 1}px`;
     const width = `calc(${minuteDurationPer} + ${num})`;
+    const overWidth = `calc(${minuteDurationPer} + ${num} + 25px)`;
     const left = `${(minuteStart / 60) * 100}%`;
     return (
-      <div 
-        className="task"
-        style={{width, left}}
-        onClick={runTask(id)}
-        onContextMenu={handleContextMenu}
-      >
-        <div className="task__progress" style={{width: progress}}></div>
-        <span className="task__badge">{progress}</span>
-      </div>
+      <TaskTooltip>
+        <>
+          <div className="over__task"  style={{width: overWidth, left}}></div>
+          <div
+            key={`task${id}`}
+            className="task"
+            style={{width, left}}
+            onClick={runTask(id)}
+            onContextMenu={handleContextMenu}
+          >
+            <div className="task__progress" style={{width: progress}}></div>
+            <span className="task__badge">{progress}</span>
+          </div>   
+        </>
+      </TaskTooltip>
     );
   }
   

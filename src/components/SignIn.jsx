@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useDispatch, useSelector} from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -14,20 +15,33 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { logIn } from '../reducers/authReducer';
-
+import apiRoutes from '../routes';
 
 export default function SignIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const auth = useSelector(state => state.auth);
   
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    const payload ={
-      email: data.get('email'),
-      password: data.get('password'),
+    const formData = new FormData(event.currentTarget);
+    const payload = {
+      username: formData.get('username'),
+      password: formData.get('password'),
     };
+    // console.log(data)
+    // const url = apiRoutes['login']();
+    // try {
+    //   const response = await axios({
+    //     method: 'post',
+    //     url,
+    //     data: formData,
+    //   });
+    //   console.log(response);
+    // } catch(err) {
+    //   console.log(err);
+    // }
+   
     dispatch(logIn(payload));
   };
   if(auth.isAuth) {
@@ -56,10 +70,9 @@ export default function SignIn() {
               margin="normal"
               required
               fullWidth
-              id="email"
-              label="Email"
-              name="email"
-              autoComplete="email"
+              label="Имя пользователя"
+              name="username"
+              autoComplete="username"
               autoFocus
             />
             <TextField
@@ -69,7 +82,6 @@ export default function SignIn() {
               name="password"
               label="Пароль"
               type="password"
-              id="password"
               autoComplete="current-password"
             />
             <FormControlLabel
@@ -81,22 +93,11 @@ export default function SignIn() {
               fullWidth
               variant="contained"
               color='secondary'
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, color: 'white' }}
             >
               Войти
             </Button>
-            <Grid container>
-              <Grid item xs>
-                <Link href="#" variant="body2">
-                  Забыли пароль?
-                </Link>
-              </Grid>
-              <Grid item>
-                <Link href="#" variant="body2">
-                  {"Еще нет аккаунта? Регистрация"}
-                </Link>
-              </Grid>
-            </Grid>
+            
           </Box>
         </Box>
       </Container>
