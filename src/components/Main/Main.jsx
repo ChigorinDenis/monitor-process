@@ -66,6 +66,7 @@ const list = [
 ];
 export default function Main() {
   const { selectedTab } = useSelector(state => state.ui);
+  const { user } =  useSelector(state => state.auth);
   const dispatch = useDispatch();
   const handleTab = (name) => () => {
     dispatch(selectTab(name));
@@ -110,8 +111,8 @@ export default function Main() {
               elevation={0}
             >
               <div>
-                <Typography variant='body1' sx={{color: 'white', mb: '10px'}}>Иванов И.И. </Typography>
-                <Typography variant='subtitle2' sx={{color: '#0288d1'}} >Инженер</Typography>
+                <Typography variant='body1' sx={{color: 'white', mb: '10px'}}>{user?.fio}</Typography>
+                <Typography variant='subtitle2' sx={{color: '#0288d1'}} >{user?.post}</Typography>
               </div>
               <BadgeIcon sx={{color: 'white'}}/>
             </Paper>

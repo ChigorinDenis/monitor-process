@@ -36,6 +36,7 @@ const initialState = {
     },
   ],
   isAuth: false,
+  user: {}
 };
 
 function checkUser(users, username, password) {
@@ -54,9 +55,11 @@ export const authSlice = createSlice({
     logIn : (state, { payload }) => {
       const { username, password } = payload;
       if (checkUser(state.users, username, password)) {
+        const user = state.users.find((item) => item.username === username);
         return {
           ...state,
-          isAuth: true
+          isAuth: true,
+          user
         }
       }
       return state;  
