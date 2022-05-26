@@ -1,35 +1,36 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = [
-  {
-    id: 1,
-    fullname: 'Билл Гейст',
-    position: 'Инженер',
-    username: 'billgates',
-    roles: ['пользователь']
-  },
-  {
-    id: 2,
-    fullname: 'Сикорский Игорь Иванович',
-    position: 'Инженер',
-    username: 'sikorski',
-    roles: ['пользователь']
-  },
-  {
-    id: 3,
-    fullname: 'Королёв Сергей Павлович',
-    position: 'Главный конструктор',
-    username: 'korolev',
-    roles: ['главный конструктор', 'админ']
-  },
-  {
-    id: 4,
-    fullname: 'Леонов Алексей Архипович',
-    position: 'Руководитель работ',
-    username: 'leonov',
-    roles: ['руководитель' ]
-  }
-];
+// const initialState = [
+//   {
+//     id: 1,
+//     fullname: 'Билл Гейст',
+//     position: 'Инженер',
+//     username: 'billgates',
+//     roles: ['пользователь']
+//   },
+//   {
+//     id: 2,
+//     fullname: 'Сикорский Игорь Иванович',
+//     position: 'Инженер',
+//     username: 'sikorski',
+//     roles: ['пользователь']
+//   },
+//   {
+//     id: 3,
+//     fullname: 'Королёв Сергей Павлович',
+//     position: 'Главный конструктор',
+//     username: 'korolev',
+//     roles: ['главный конструктор', 'админ']
+//   },
+//   {
+//     id: 4,
+//     fullname: 'Леонов Алексей Архипович',
+//     position: 'Руководитель работ',
+//     username: 'leonov',
+//     roles: ['руководитель' ]
+//   }
+// ];
+const initialState = [];
 
 export const personSlice = createSlice({
   name: 'persons',
@@ -37,6 +38,9 @@ export const personSlice = createSlice({
   reducers: {
     addPerson: (state, { payload }) => {
       return [...state, payload];
+    },
+    addPersons: (state, { payload }) => {
+      return [...payload];
     },
     updatePersons: (state, { payload }) => {
       return payload;
@@ -48,6 +52,6 @@ export const personSlice = createSlice({
   }
 });
 
-export const { addPerson, updaPersonss, removePerson } = personSlice.actions;
+export const { addPerson, addPersons, updaPersonss, removePerson } = personSlice.actions;
 
 export default personSlice.reducer;

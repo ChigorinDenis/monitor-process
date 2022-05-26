@@ -1,4 +1,5 @@
 import React from 'react';
+import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
@@ -8,33 +9,41 @@ import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import {addEditedTask} from '../reducers/taskEditedReducer';
+import { addOperation, updateOperation } from '../reducers/operationReducer';
+import { closeDialog } from '../reducers/uiReducer';
+import apiRoutes from '../routes';
 
 function AddOperationForm(props) {
   const dispatch = useDispatch()
-  const tasksEdited = useSelector(state => state.tasksEdited);
-  const { length } = tasksEdited;
+  const { dialogs } = useSelector(state => state.ui);
+  const { operation } = dialogs;
   const { onClose, open } = props;
 
   const handleClose = () => {
-    onClose();
+    dispatch(closeDialog({dialogName: 'operation' }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = (operationDialog) => async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const editedTask = {
+    const newData = {
       timeStart: data.get('timeStart'),
       duration: data.get('duration'),
-      operation: data.get('operation'),
-      id:length + 1
+      description: data.get('description'),
     };
-    dispatch(addEditedTask(editedTask));
-    onClose();
+    const url = operationDialog.mode === 'add' ? apiRoutes('addNewOperation'): apiRoutes('editOperation');
+    const operation = operationDialog.mode === 'add' ? newData : { id: operationDialog.data.id, ...newData};
+    try {
+      const response = await axios.post(url, operation);
+      operationDialog.mode === 'add' ? dispatch(addOperation(operation)) : dispatch(updateOperation(operation));
+    } catch (e) {
+      alert(e);
+    }
+    handleClose();
   };
   return (
     <Dialog onClose={handleClose} open={open}>
-      <DialogTitle>Добавить Операцию</DialogTitle>
+      <DialogTitle>{operation.mode === 'add' ? 'Добавить операцию': ' Редактировать операцию'}</DialogTitle>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -45,28 +54,27 @@ function AddOperationForm(props) {
             alignItems: 'center',
           }}
         >
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+          <Box component="form" noValidate onSubmit={handleSubmit(operation)} sx={{ mt: 1 }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  type='time'
-                  autoComplete="given-name"
                   name="timeStart"
                   required
                   fullWidth
+                  defaultValue={operation.mode === 'edit' ? operation.data.timeStart : ''}
                   label="Время Начала"
-                  defaultValue={'00:00'}
+                  placeholder='В минутах'
                   autoFocus
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  type='time'
+                  name="duration"
                   required
                   fullWidth
                   label="Длительность"
-                  defaultValue={'00:00'}
-                  name="duration"
+                  defaultValue={operation.mode === 'edit' ? operation.data.duration : ''}
+                  placeholder='В минутах'  
                 />
               </Grid>
               <Grid item xs={12}>
@@ -74,10 +82,11 @@ function AddOperationForm(props) {
                   required
                   fullWidth
                   multiline
+                  defaultValue={operation.mode === 'edit' ? operation.data.description : ''}
                   maxRows={4}
                   minRows={2}
                   label="Описание Операции "
-                  name="operation"
+                  name="description"
                 />
               </Grid>
             </Grid>
@@ -88,7 +97,7 @@ function AddOperationForm(props) {
               color='secondary'
               sx={{ mt: 3, mb: 2, color: '#fff', boxShadow: 'none' }} 
             >
-              Добавить
+              {operation.mode === 'add' ? 'Добавить': ' Редактировать'}
             </Button>
           </Box>
         </Box>

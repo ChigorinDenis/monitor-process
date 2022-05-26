@@ -22,13 +22,6 @@ function TabPanel(props) {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      style={{
-        tab: { 
-            '& .MuiBox-root': {
-              padding: '0px',
-              },
-            },
-        }}
       {...other}
     >
       {value === index && (
@@ -55,15 +48,25 @@ function a11yProps(index) {
 }
 const Table1 = () => {
   return (
-    <TableContainer component={Paper}>
-        <Table>
+    <TableContainer component={Paper} sx={{fontSize: '8px'}}>
+        <Table sx={{fontSize: '8px'}}>
           <TableHead>
             <TableRow>
-              <TableCell>ФИО</TableCell>
-              <TableCell>Имя Пользователя</TableCell>
-              <TableCell />
+              <TableCell>Время</TableCell>
+              <TableCell>Причина</TableCell>
+              <TableCell>Инженер</TableCell>
             </TableRow>
           </TableHead>
+            <TableRow>
+              <TableCell>02.35</TableCell>
+              <TableCell>Отказ блока РН</TableCell>
+              <TableCell>Сидоров С.Е</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>04.00</TableCell>
+              <TableCell>Отказ блока РН</TableCell>
+              <TableCell>Сидоров С.Е</TableCell>
+            </TableRow>
           <TableBody>
            
           </TableBody>
@@ -79,19 +82,19 @@ export default function BasicTabs() {
   };
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <Tabs value={value} onChange={handleChange} >
-          <Tab label="Список остановок" {...a11yProps(0)} sx={{textTransform: 'none'}}/>
-          <Tab label="Каталог неисправностей" {...a11yProps(1)}sx={{textTransform: 'none'}}/>
-        </Tabs>
-      </Box>
-      <TabPanel value={value} index={0} sx={{ with: '100%', p: 0}}>
+    // <Box sx={{ width: '100%' }}>
+    //   <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+    //     <Tabs value={value} onChange={handleChange} >
+    //       <Tab label="Список остановок" {...a11yProps(0)} sx={{textTransform: 'none'}}/>
+    //       <Tab label="Каталог неисправностей" {...a11yProps(1)}sx={{textTransform: 'none'}}/>
+    //     </Tabs>
+    //   </Box>
+    //   <TabPanel value={value} index={0} style={{ padding: 0}}>
         <Table1 />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        Item Two
-      </TabPanel>
-    </Box>
+    //   </TabPanel>
+    //   <TabPanel value={value} index={1}>
+    //     Item Two
+    //   </TabPanel>
+    // </Box>
   );
 }

@@ -110,8 +110,8 @@ export default function Main() {
               elevation={0}
             >
               <div>
-                <Typography variant='body1' sx={{color: 'white', mb: '10px'}}>Илон Маск</Typography>
-                <Typography variant='subtitle2' sx={{color: '#0288d1'}} >Главный конструктор</Typography>
+                <Typography variant='body1' sx={{color: 'white', mb: '10px'}}>Иванов И.И. </Typography>
+                <Typography variant='subtitle2' sx={{color: '#0288d1'}} >Инженер</Typography>
               </div>
               <BadgeIcon sx={{color: 'white'}}/>
             </Paper>

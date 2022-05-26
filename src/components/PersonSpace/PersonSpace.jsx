@@ -18,23 +18,24 @@ import Typography from '@mui/material/Typography';
 import { Button, Box } from "@mui/material";
 import { removeUser} from '../../reducers/authReducer';
 import AddPersonForm from "../AddPersonForm";
+import { addPersons } from "../../reducers/personReducer";
 import apiRoutes from '../../routes';
 
 const PersonalSpace = () => {
   const rows = useSelector(ui => ui.auth).users;
-  // const dispatch = useDispatch();
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {   
-  //       const response = await axios.get(apiRoutes['getBlocks']());    
-  //       console.log(response.data);
-  //     } catch(err) {    
-  //       console.log(err);
-  //     }
-  //   }
-  //  fetchData();
-  // }, []);
   const dispatch = useDispatch();
+  useEffect(() => {
+    const fetchData = async () => {
+      try {   
+        const response = await axios.get(apiRoutes('getUsers')); 
+        dispatch(addPersons(response.data));  
+        
+      } catch(err) {    
+        console.log(err);
+      }
+    }
+   fetchData();
+  }, []);
   const handleRemove = (id) => () => {
     dispatch(removeUser({id}));
   }

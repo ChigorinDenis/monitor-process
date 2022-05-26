@@ -2,7 +2,14 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   selectedTask: {},
-  selectedTab: 'work'
+  selectedTab: 'work',
+  dialogs: {
+    operation: {
+      open: false,
+      mode: 'add',
+      data: {}
+    }
+  }
 };
 
 export const uiSlice = createSlice({
@@ -21,9 +28,37 @@ export const uiSlice = createSlice({
         selectedTab: payload
       }
     },
+    openDialog : (state, { payload }) => {
+      const { dialogs } = state;
+      const { dialogName, mode, data = '' } = payload;
+      return {
+        ...state,
+        dialogs: {
+          ...dialogs,
+          [dialogName]: {
+            open: true,
+            mode,
+            data
+          }
+        }
+      }
+    },
+    closeDialog : (state, { payload }) => {
+      const { dialogs } = state;
+      const { dialogName } = payload;
+      return {
+        ...state,
+        dialogs: {
+          ...dialogs,
+          [dialogName]: {
+            open: false,
+          }
+        }
+      }
+    },
   }
 });
 
-export const { selectTask, selectTab} = uiSlice.actions;
+export const { selectTask, selectTab, openDialog, closeDialog} = uiSlice.actions;
 
 export default uiSlice.reducer;

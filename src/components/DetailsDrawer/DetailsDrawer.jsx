@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
-import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
 import { Container } from '@mui/material';
@@ -9,13 +8,15 @@ import Tooltip from '@mui/material/Tooltip';
 import Divider from '@mui/material/Divider';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Tabs from '../Tabs';
+import Button from '@mui/material/Button';
+import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
 import { TextField } from '@mui/material';
 import { flexbox } from '@mui/system';
 
 
 export default function DetailsDrawer() {
   const [state, setState] = React.useState({
-    right: true,
+    right: false,
   });
 
   const toggleDrawer = (anchor, open) => (event) => {
@@ -53,7 +54,7 @@ export default function DetailsDrawer() {
           >
           Операция 1
           </Typography>
-          <Chip label="Запущена" color="secondary" size="small" variant='outlined'/>
+          <Chip label="Остановлена" color="error" size="small" variant='outlined'/>
         </Box>
         <Divider />
         <Box
@@ -96,7 +97,24 @@ export default function DetailsDrawer() {
           >
           Выгрузка, проверка и приемка сопроводительной документации на изделия
         </Typography>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            columnGap: 2,
+            alignItems: 'center',
+            mt: 3,
+  
+          }}>
+            <Typography
+              variant='subtitle1'
+              sx={{ color: 'grey'}}
+            >
+              Отказы операции
+            </Typography>
+          </Box>
         <Tabs />
+        <Button variant="contained" fullWidth sx={{background: '#039be5', mt: 50}}>Продолжить выполнение</Button>
       </Container>
   
     </Box>
@@ -110,6 +128,7 @@ export default function DetailsDrawer() {
           <SwipeableDrawer
             anchor={anchor}
             open={state[anchor]}
+            variant='persistent'
             onClose={toggleDrawer(anchor, false)}
             onOpen={toggleDrawer(anchor, true)}
           >

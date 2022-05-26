@@ -101,7 +101,7 @@ const GanntTable = () => {
     return (
       <TaskTooltip>
         <>
-          <div className="over__task"  style={{width: overWidth, left}}></div>
+          {/* <div className="over__task"  style={{width: overWidth, left}}></div> */}
           <div
             key={`task${id}`}
             className="task"
