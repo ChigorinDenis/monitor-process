@@ -7,6 +7,12 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import TextField from '@mui/material/TextField';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { ru } from 'date-fns/locale'
+import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Checkbox from '@mui/material/Checkbox';
@@ -16,11 +22,11 @@ import CheckIcon from '@mui/icons-material/Check';
 import { Box, Paper, Button} from "@mui/material";
 import { addBlocks } from '../reducers/blockReducer';
 import apiRoutes from '../routes';
-import { height } from '@mui/system';
+
 
 export default function CheckboxList({ show }) {
   const blocks = useSelector((state) => state.blocks);
-  const date = new Date();
+  const [date, setDate] = React.useState(new Date());
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
@@ -52,15 +58,18 @@ export default function CheckboxList({ show }) {
     const launch = {
       name: data.get('name'),
       missionNumber: data.get('missionNumber'),
-      testStartDate: `${data.get('date')}T${data.get('time')}:00.000+00:00`
+      testStartDate: `${date.getDate()}T${date.getTime()}:00.000+00:00`,
+      date: date.getDate(),
+      time: date.getTime()
     };
-    try {
-      const url = apiRoutes('addNewLaunch')
-      const response = await axios.post(url, launch);
-      alert(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+    console.log(launch)
+    // try {
+    //   const url = apiRoutes('addNewLaunch')
+    //   const response = await axios.post(url, launch);
+    //   alert(response.data);
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   return (
@@ -97,29 +106,25 @@ export default function CheckboxList({ show }) {
           />
         </Box>
         <Box  sx={{ mt: 3, display: 'flex', gap: 2}}>
-          <Grid item xs={12} sm={6}>
-              <TextField
-                type='date'
-                name="date"
-                size="small"
-                defaultValue={date.getDate()}
-                required
-                fullWidth
-                label='Дата испытний'
-                autoFocus
-              />
-              
-            </Grid>
+          <LocalizationProvider dateAdapter={AdapterDateFns} locale={ru}>
             <Grid item xs={12} sm={6}>
-              <TextField
-                type='time'
-                name="time"
-                size="small"
-                label='Время начала'
-                required
-                fullWidth
+                <DesktopDatePicker
+                  label="Дата испытаний"
+                  value={date}
+                  onChange={(newValue) => setDate(newValue)}
+                  inputFormat="MM/dd/yyyy"
+                  renderInput={(params) => <TextField {...params} />}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+              <TimePicker
+                value={date}
+                onChange={(newValue) => setDate(newValue)}
+                label="Время начала"
+                renderInput={(params) => <TextField {...params} />}
               />
-            </Grid>
+              </Grid>
+            </LocalizationProvider>
         </Box>
     
       <Typography variant='subtitle2' sx={{mt:3, mb:1}}>Выберите блоки</Typography>
@@ -129,11 +134,6 @@ export default function CheckboxList({ show }) {
           return (
             <ListItem
               key={id}
-              // secondaryAction={
-              //   <IconButton edge="end" aria-label="comments">
-              //     <VisibilityIcon />
-              //   </IconButton>
-              // }
               disablePadding
             >
               <ListItemButton role={undefined} onClick={handleToggle(id)} dense>

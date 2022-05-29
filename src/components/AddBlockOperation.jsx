@@ -15,39 +15,53 @@ import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 import Box from '@mui/material/Box';
-import apiRoutes from '../routes'
-import { addUser} from '../reducers/authReducer';
+import apiRoutes from '../routes';
+import { addBlock } from '../reducers/blockReducer';
+import { updateFieldBlocks } from '../reducers/operationReducer'
 
 function AddBlockOperation(props) {
   const dispatch = useDispatch()
   const blocks = useSelector(state => state.blocks);
+  const { checkOperations } = useSelector(state => state.ui);
   const { onClose, open } = props;
-  const [block, setBlock] = React.useState('');
-  const [roles, setRoles] = React.useState([]);
+  const [idBlock, setIdBlock] = React.useState('');
   const [mode, setMode] = React.useState(false);
   const handleChange = (event) => {
-    setBlock(event.target.value);
+    setIdBlock(event.target.value);
   };
 
   const handleClose = () => {
     onClose();
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit  = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const block = {
+    const blockData = {
       name: data.get('name'),
       description: data.get('description'),
     };
-    const url = apiRoutes('addNewBlock');
+    const blockOperations = {
+      idBlock,
+      idOperations: checkOperations.map((id) => ({ id })),
+    }
+    
+    const url = mode ? apiRoutes('addNewBlock') : apiRoutes('addNewBlockOperations');
+    const postData = mode ? blockData: blockOperations;
     try {
-      const response = await axios.post(url, block);
+      const response = await axios.post(url, postData);
+      mode ? dispatch(addBlock(postData)) : dispatch(updateFieldBlocks({
+        block:
+          {
+            id: idBlock,
+            ...blocks.find((block) => block.id === idBlock)
+          },
+        idOperations: checkOperations,
+      }));
       alert('Блок успешно добавлен')
     } catch (err) {
-      alert('errror');
+      alert(err);
     }
-    dispatch(addUser(user));
     onClose();
   };
   return (
@@ -68,7 +82,7 @@ function AddBlockOperation(props) {
                   <Select
                     labelId="add-block-select-label"
                     id="add-block-select"
-                    value={block}
+                    value={idBlock}
                     label="Блок"
                     onChange={handleChange}
                   >
@@ -86,7 +100,7 @@ function AddBlockOperation(props) {
                   <TextField
                     required
                     fullWidth
-                    label="ФИО"
+                    label="Название"
                     name="name"
                     defaultValue={'Блок'}
                   />
@@ -95,6 +109,9 @@ function AddBlockOperation(props) {
                   <TextField
                     required
                     fullWidth
+                    multiline
+                    maxRows={4}
+                    minRows={2}
                     defaultValue={'Сведения о  блоке'}
                     label="Описание"
                     name="description"

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -13,12 +14,26 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import SelectChip from '../components/SelectChip';
-import { addUser} from '../reducers/authReducer';
+import { addPerson } from '../reducers/personReducer';
+import { addRoles } from '../reducers/roleReducer';
+import apiRoutes from '../routes';
 
 function AddPersonForm(props) {
-  const dispatch = useDispatch()
-  const { users } = useSelector(state => state.auth);
-  const { length } = users;
+  const dispatch = useDispatch();
+  const rolesData  = useSelector(state => state.roles);
+  useEffect(() => {
+    const fetchData = async () => {
+      const url = apiRoutes('getRoles');
+      try {
+        const response = await axios.get(url);
+        dispatch(addRoles(response.data));
+        
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    fetchData();
+  }, []);
   const { onClose, open } = props;
   const [post, setPost] = React.useState('');
   const [roles, setRoles] = React.useState([]);
@@ -31,18 +46,24 @@ function AddPersonForm(props) {
     onClose();
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const user = {
-      id:length + 1,
       fio: data.get('fio'),
       username: data.get('username'),
-      password: '111',
+      password:  data.get('password'),
+      passwordConfirm:  data.get('passwordConfirm'),
       post,
-      roles 
+      roles: roles.map((name) => ({ name }))
     };
-    dispatch(addUser(user));
+    const url = apiRoutes('addNewUser');
+    try {
+      const response = await axios.post(url, user);
+      dispatch(addPerson(user));
+    } catch (err) {
+      console.log(err);
+    }
     onClose();
   };
   return (
@@ -92,9 +113,28 @@ function AddPersonForm(props) {
                   </Select>
                 </FormControl>
               </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  type='password'
+                  required
+                  fullWidth
+                  label="Пароль"
+                  name="password"
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  type='password'
+                  required
+                  fullWidth
+                  label="Подтверждение пароля"
+                  name="passwordConfirm"
+                />
+              </Grid>
               <Grid item xs={12}>
                 <SelectChip
                   item={roles}
+                  data={rolesData}
                   setItem={setRoles}
                 />
               </Grid>

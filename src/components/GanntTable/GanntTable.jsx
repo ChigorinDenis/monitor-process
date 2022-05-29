@@ -1,23 +1,31 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import axios from 'axios';
 import  TaskTooltip  from '../Tooltip';
 import './GanntTable.scss';
 import store from "../../store";
 import engine from "../../fakeEngine";
-import { addTask } from "../../reducers/taskReducer";
+import { addTask } from "../../reducers/historyOperationReducer";
 import { selectTask } from "../../reducers/uiReducer";
 import ContexMenu from "../ContexMenu";
-
+import apiRoutes from '../../routes';
 const cols = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 
 
 const GanntTable = () => {
   const dispatch = useDispatch();
-  const tasks = useSelector((state) => state.tasks);
+  const tasks = useSelector((state) => state.historyOperation);
   useEffect(() => {
     engine.run();
     const data = engine.getTasks();
     data.map((task) => (dispatch(addTask(task))));
+    const url = apiRoutes('getHistoryOperationsByBlock');
+    
+    try {
+      
+    } catch (error) {
+      
+    }
   },[]);
 
   const [contextMenu, setContextMenu] = React.useState(null);
@@ -38,6 +46,7 @@ const GanntTable = () => {
   const handleClose = () => {
     setContextMenu(null);
   };
+
   const hoursToMinutes = (time) => {
     const [hours, minutes] = time.split('.').map(Number);
     return hours * 60 + minutes;

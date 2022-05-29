@@ -22,7 +22,7 @@ import { addPersons } from "../../reducers/personReducer";
 import apiRoutes from '../../routes';
 
 const PersonalSpace = () => {
-  const rows = useSelector(ui => ui.auth).users;
+  const rows = useSelector(ui => ui.persons);
   const dispatch = useDispatch();
   useEffect(() => {
     const fetchData = async () => {
@@ -48,7 +48,16 @@ const PersonalSpace = () => {
   const handleClose = () => {
     setOpen(false);
   };
-  const renderChip = (name) => {
+
+  const valueToName = {
+    ADMIN: 'админ',
+    CONSTRUCTOR: 'главный конструктор',
+    MANAGER: 'руководитель',
+    ENGINEER: 'пользователь',
+  };
+
+  const renderChip = (role) => {
+    const name = valueToName[role.name];
     if (name === 'админ') {
       return (
         <Chip label={name} color="error" variant="outlined" />
@@ -98,7 +107,6 @@ const PersonalSpace = () => {
               <TableCell>ФИО</TableCell>
               <TableCell>Имя Пользователя</TableCell>
               <TableCell>Должность</TableCell>
-              
               <TableCell>Роли</TableCell>
               <TableCell />
             </TableRow>

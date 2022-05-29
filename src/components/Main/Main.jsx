@@ -111,8 +111,8 @@ export default function Main() {
               elevation={0}
             >
               <div>
-                <Typography variant='body1' sx={{color: 'white', mb: '10px'}}>{user?.fio}</Typography>
-                <Typography variant='subtitle2' sx={{color: '#0288d1'}} >{user?.post}</Typography>
+                <Typography variant='body1' sx={{color: 'white', mb: '10px'}}>{user?.fio || 'testname'}</Typography>
+                <Typography variant='subtitle2' sx={{color: '#0288d1'}} >{user?.post || 'admin'}</Typography>
               </div>
               <BadgeIcon sx={{color: 'white'}}/>
             </Paper>

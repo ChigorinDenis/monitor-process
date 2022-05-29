@@ -19,16 +19,16 @@ const MenuProps = {
   },
 };
 
-const names = [
-  'админ',
-  'главный конструктор',
-  'руководитель',
-  'пользователь',
-];
+const valueToName = {
+  ADMIN: 'админ',
+  CONSTRUCTOR: 'главный конструктор',
+  MANAGER: 'руководитель',
+  ENGINEER: 'пользователь',
+};
 
 
 
-export default function MultipleSelectChip({ item, setItem}) {
+export default function MultipleSelectChip({ item, setItem, data }) {
  
   const handleChange = (event) => {
     const {
@@ -38,7 +38,6 @@ export default function MultipleSelectChip({ item, setItem}) {
       typeof value === 'string' ? value.split(',') : value,
     );
   };
-
   return (
     <div>
       <FormControl fullWidth>
@@ -53,18 +52,18 @@ export default function MultipleSelectChip({ item, setItem}) {
           renderValue={(selected) => (
             <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
               {selected.map((value) => (
-                <Chip key={value} label={value} variant='outlined'/>
+                <Chip key={value} label={valueToName[value]} variant='outlined'/>
               ))}
             </Box>
           )}
           MenuProps={MenuProps}
         >
-          {names.map((name) => (
+          {data.map(({id, name}) => (
             <MenuItem
-              key={name}
+              key={`${id}${name}`}
               value={name}
             >
-              {name}
+              {valueToName[name]}
             </MenuItem>
           ))}
         </Select>

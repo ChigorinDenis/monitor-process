@@ -17,12 +17,13 @@ import Typography from '@mui/material/Typography';
 import { Button, Box } from "@mui/material";
 import { removeOperation } from '../../reducers/operationReducer';
 import AddOperationForm from '../AddOperationForm';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
+import Chip from '@mui/material/Chip';
+import Stack from '@mui/material/Stack';
 import BlockSpace from '../BlockSpace';
 import Checkbox from '@mui/material/Checkbox';
 import ToolbarTable from '../ToolbarTable';
 import { addOperations } from '../../reducers/operationReducer';
+import { addCheckOperations } from "../../reducers/uiReducer";
 import { openDialog } from '../../reducers/uiReducer';
 import apiRoutes from '../../routes'
 
@@ -56,18 +57,26 @@ export default function BasicTable() {
     if (isCheckAll) {
       setIsCheck([]);
       setIsCheckAll(false);
+      dispatch(addCheckOperations([]));
       return;
     }
-    setIsCheck(rows.map((row) => row.id ));
+    const newIsCheck = rows.map((row) => row.id )
+    setIsCheck(newIsCheck);
+    dispatch(addCheckOperations(newIsCheck));
     setIsCheckAll(true);
   }
 
   const handleToggle = (id) => () => {
+    let newIsCheck;
     if (isCheck.includes(id)) {
-      setIsCheck(isCheck.filter(item => item !== id));
+      newIsCheck = isCheck.filter(item => item !== id)
+      setIsCheck(newIsCheck);
+      dispatch(addCheckOperations(newIsCheck));
       return;
     }
-    setIsCheck([...isCheck, id]);
+    newIsCheck = [...isCheck, id]
+    setIsCheck(newIsCheck);
+    dispatch(addCheckOperations(newIsCheck));  
   };
 
   const handleClickOpen = () => {
@@ -147,6 +156,7 @@ export default function BasicTable() {
                   <TableCell>Описание</TableCell>
                   <TableCell>Время Начала</TableCell>
                   <TableCell>Длительность</TableCell>
+                  <TableCell>Блоки</TableCell>
                   <TableCell />
                 </TableRow>
               </TableHead>
@@ -171,6 +181,13 @@ export default function BasicTable() {
                     <TableCell>{row.description}</TableCell>
                     <TableCell>{row.timeStart}</TableCell>
                     <TableCell>{row.duration}</TableCell>
+                    <TableCell>
+                    <Stack direction="row" spacing={1}>
+                      {row.blocks.map(({ name }) => (
+                        <Chip label={name} sx={{color: '#0288d1', borderColor: '#0288d1'}} variant="outlined" />
+                      ))}
+                    </Stack>
+                    </TableCell>
                     <TableCell>
                       <IconButton
                         size='small'
