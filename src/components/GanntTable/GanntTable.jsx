@@ -4,33 +4,43 @@ import axios from 'axios';
 import  TaskTooltip  from '../Tooltip';
 import './GanntTable.scss';
 import store from "../../store";
-import engine from "../../fakeEngine";
-import { addTask } from "../../reducers/historyOperationReducer";
-import { selectTask } from "../../reducers/uiReducer";
+import { selectTask, selectOperationId } from "../../reducers/uiReducer";
 import ContexMenu from "../ContexMenu";
 import apiRoutes from '../../routes';
 const cols = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 
 
-const GanntTable = () => {
-  const dispatch = useDispatch();
-  const tasks = useSelector((state) => state.historyOperation);
-  useEffect(() => {
-    engine.run();
-    const data = engine.getTasks();
-    data.map((task) => (dispatch(addTask(task))));
-    const url = apiRoutes('getHistoryOperationsByBlock');
-    
-    try {
-      
-    } catch (error) {
-      
-    }
-  },[]);
+const GanntTable = ({ data }) => {
 
   const [contextMenu, setContextMenu] = React.useState(null);
+  const dispatch = useDispatch();
+  const { selectedOperationId } = useSelector(state => state.ui);
 
-  const handleContextMenu = (event) => {
+  const handleRunOperation = async () => {
+    const url = apiRoutes('startHistoryOperation')(selectedOperationId);
+    try {
+      const response = await axios.post(url);
+      alert(`Запущена операция ${selectedOperationId}`)
+    } catch (err) {
+      alert(err);
+      console.log(err);
+    }
+  }
+  const handleStopOperation = async () => {
+    const url = apiRoutes('stopHistoryOperation')(selectedOperationId);
+    const data = {
+      note: 'Операция остановлена по такой-то причине'
+    }
+    try {
+      const response = await axios.post(url, data);
+      alert(`Остановлена операция ${selectedOperationId}`)
+    } catch (err) {
+      alert(err);
+      console.log(err);
+    }
+  }
+
+  const handleContextMenu = (id) => (event) => {
     event.preventDefault();
     setContextMenu(
       contextMenu === null
@@ -41,6 +51,7 @@ const GanntTable = () => {
         : 
           null,
     );
+    dispatch(selectOperationId(id))
   };
 
   const handleClose = () => {
@@ -53,6 +64,12 @@ const GanntTable = () => {
   }
   
   const calcProgress = (duration, progress) => ((hoursToMinutes(progress) / hoursToMinutes(duration)) * 100);
+
+  const minuteToFormat = (minutes) => {
+    const mins = minutes % 60;
+    const hours = (minutes - mins) / 60;
+    return [hours, mins]
+  }
   
   const buildRow = (data) => {
     return (
@@ -61,37 +78,38 @@ const GanntTable = () => {
           id,
           duration,
           timeStart,
-          operation,
-          progress
+          description,
+          percent,
+          id_history,
         } = task;
         return (
-          <>
-            <tr key={id}>
-              <td>{operation}</td>
-              <td>{timeStart}</td>
-              <td>{duration}</td>
-              {
-              cols.map((z, index) => {
-                return buildCol(timeStart, duration, progress, index, id);
-              })
-              }
-            </tr>
-          </>
+          <tr key={id}>
+            <td>{description}</td>
+            <td>{timeStart}</td>
+            <td>{duration}</td>
+            {
+            cols.map((z, index) => {
+              return buildCol(timeStart, duration, percent, index, id, id_history);
+            })
+            }
+          </tr>
         )
       })   
     )
   }
-  const buildCol = (timeStart, duration, progress, i, id) => {
-    const [hourStart, minuteStart] = timeStart.split('.').map(Number);
+  
+  const buildCol = (timeStart, duration, percent, i, id, id_history) => {
+    // const [hourStart, minuteStart] = timeStart.split('.').map(Number);
+    const [hourStart, minuteStart] = minuteToFormat(timeStart)
     if (hourStart!= i ) {
       return (
         <td key={i}></td>
       );
     } 
-    const progressWidth = Math.round(calcProgress(duration, progress));
+    // const progressWidth = Math.round(calcProgress(duration, progress));
     return (
       <td key={`col${i}`} style={{position:'relative'}}>
-        {buildTask(duration, minuteStart, `${progressWidth}%`, id)}
+        {buildTask(duration, minuteStart, Number(percent.toFixed(2)), id, id_history)}
       </td>
     );
   }
@@ -100,26 +118,27 @@ const GanntTable = () => {
     store.dispatch(selectTask({ id }));
   };
   
-  const buildTask = (duration, minuteStart, progress, id) => {
-    const [hourDuration, minuteDuration] = duration.split('.').map(Number);
+  const buildTask = (duration, minuteStart, percent, id, id_history) => {
+    // const [hourDuration, minuteDuration] = duration.split('.').map(Number);
+    const [hourDuration, minuteDuration] = minuteToFormat(duration);
     const minuteDurationPer = `${((minuteDuration / 60) * 100) + (hourDuration * 100)}%`;
     const num = `${hourDuration - 1}px`;
     const width = `calc(${minuteDurationPer} + ${num})`;
-    const overWidth = `calc(${minuteDurationPer} + ${num} + 25px)`;
+    // const overWidth = `calc(${minuteDurationPer} + ${num} + ')`;
+    const overWidth =`${((minuteDuration / 60) * percent) + (hourDuration * percent)}%`
     const left = `${(minuteStart / 60) * 100}%`;
     return (
       <TaskTooltip>
         <>
-          {/* <div className="over__task"  style={{width: overWidth, left}}></div> */}
+          {percent > 100 && <div className="over__task"  style={{width: overWidth, left}}></div>}
           <div
             key={`task${id}`}
             className="task"
             style={{width, left}}
-            onClick={runTask(id)}
-            onContextMenu={handleContextMenu}
+            onContextMenu={handleContextMenu(id_history)}
           >
-            <div className="task__progress" style={{width: progress}}></div>
-            <span className="task__badge">{progress}</span>
+            <div className="task__progress" style={{width: `${percent}%`}}></div>
+            <span className="task__badge">{`${percent}%`}</span>
           </div>   
         </>
       </TaskTooltip>
@@ -151,11 +170,16 @@ const GanntTable = () => {
             </tr>
           </thead>
           <tbody>
-            {buildRow(tasks)}
+            {buildRow(data)}
           </tbody>
         </table>
       </div>
-      <ContexMenu contextMenu={contextMenu} handleClose={handleClose} />
+      <ContexMenu
+        contextMenu={contextMenu}
+        handleClose={handleClose}
+        handleRunOperation={handleRunOperation}
+        handleStopOperation={handleStopOperation}
+      />
     </>
     
   )

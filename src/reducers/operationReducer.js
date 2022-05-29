@@ -23,11 +23,20 @@ export const operationSlice = createSlice({
       return [...state, payload];
     },
     updateOperation: (state, { payload }) => {
-      const { id, timeStart, duration, description } = payload;
+      const { id, timeStart, duration, description, blocks } = payload;
       const operation = state.find((item) => item.id === id)
       operation.timeStart = timeStart;
       operation.duration = duration;
       operation.description = description;
+      return;
+    },
+    updateFieldBlocks: (state, { payload }) => {
+      const { idOperations, block } = payload;
+      state.forEach((item) => {
+        if (idOperations.includes(item.id)) {
+          item.blocks.push(block);
+        }
+      });
       return;
     },
     removeOperation: (state, { payload }) => {
@@ -37,6 +46,12 @@ export const operationSlice = createSlice({
   }
 });
 
-export const { addOperations, addOperation, updateOperation ,removeOperation } = operationSlice.actions;
+export const {
+  addOperations,
+  addOperation,
+  updateOperation,
+  removeOperation,
+  updateFieldBlocks
+} = operationSlice.actions;
 
 export default operationSlice.reducer;

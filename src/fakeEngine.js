@@ -1,5 +1,5 @@
 import store from "./store";
-import { updateTasks } from "./reducers/taskReducer";
+import { updateTasks } from "./reducers/historyOperationReducer";
 
 function createData(id, operation, timeStart, duration) {
   return { id, operation, timeStart, duration };

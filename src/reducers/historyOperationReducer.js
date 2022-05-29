@@ -6,8 +6,8 @@ export const taskSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
-    addTask: (state, { payload }) => {
-      return [...state, payload];
+    addHistoryOperations: (state, { payload }) => {
+      return [ ...payload ];
     },
     updateTasks: (state, { payload }) => {
       return payload;
@@ -19,6 +19,6 @@ export const taskSlice = createSlice({
   }
 });
 
-export const { addTask, updateTasks, removeTask } = taskSlice.actions;
+export const { addHistoryOperations, updateTasks, removeTask } = taskSlice.actions;
 
 export default taskSlice.reducer;

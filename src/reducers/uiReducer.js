@@ -9,13 +9,21 @@ const initialState = {
       mode: 'add',
       data: {}
     }
-  }
+  },
+  checkOperations: [],
+  selectedOperationId: '',
 };
 
 export const uiSlice = createSlice({
   name: 'ui',
   initialState,
   reducers: {
+    selectOperationId : (state, { payload }) => {
+      return {
+        ...state,
+        selectedOperationId: payload
+      }
+    },
     selectTask : (state, { payload }) => {
       return {
         ...state,
@@ -56,9 +64,22 @@ export const uiSlice = createSlice({
         }
       }
     },
+    addCheckOperations : (state, { payload }) => {
+      return {
+        ...state,
+        checkOperations: payload
+      }
+    },
   }
 });
 
-export const { selectTask, selectTab, openDialog, closeDialog} = uiSlice.actions;
+export const {
+  selectTask,
+  selectTab,
+  openDialog,
+  closeDialog,
+  addCheckOperations,
+  selectOperationId
+} = uiSlice.actions;
 
 export default uiSlice.reducer;

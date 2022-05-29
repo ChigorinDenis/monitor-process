@@ -1,19 +1,23 @@
 import { configureStore } from '@reduxjs/toolkit';
-import taskReducer from './reducers/taskReducer.js';
+import historyOperationReducer from './reducers/historyOperationReducer.js';
 import uiReducer from './reducers/uiReducer.js';
 import personReducer from './reducers/personReducer.js';
 import operationReducer from './reducers/operationReducer.js';
 import authReducer from './reducers/authReducer.js';
 import blockReducer from './reducers/blockReducer.js';
+import roleReducer from './reducers/roleReducer';
+import launchReducer from './reducers/launchReducer.js';
 
 const store = configureStore({
   reducer: {
-    tasks: taskReducer,
+    historyOperation: historyOperationReducer,
     persons: personReducer,
+    roles: roleReducer,
     operation: operationReducer,
     blocks: blockReducer,
     auth: authReducer,
-    ui: uiReducer
+    ui: uiReducer,
+    launches: launchReducer,
   },
 });
 

@@ -7,7 +7,12 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Divider from '@mui/material/Divider';
 
 export default function ContextMenu( props ) {
-  const {contextMenu, handleClose} = props;
+  const {
+    contextMenu,
+    handleClose,
+    handleRunOperation,
+    handleStopOperation
+  } = props;
   return (
       <Menu
         open={contextMenu !== null}
@@ -19,11 +24,17 @@ export default function ContextMenu( props ) {
             : undefined
         }
       >
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => {
+          handleRunOperation();
+          handleClose();
+        }}>
           <PlayCircleIcon color='secondary' sx={{mr:2}}/>
           Запустить
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => {
+          handleStopOperation();
+          handleClose();
+        }}>
           <StopCircleIcon color='error' sx={{mr:2}}/>
           Остановить
         </MenuItem>
