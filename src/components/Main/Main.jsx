@@ -1,6 +1,5 @@
 import * as React from 'react';
-import { Suspense } from 'react';
-import { Routes, Route, Link, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { useSelector, useDispatch } from 'react-redux';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -42,7 +41,7 @@ const getTab = (name) => {
   };
   return mappingName[name];
 }
-const list = [
+const listCostructor = [
   {
     name: 'Испытания',
     tabName: 'work',
@@ -64,9 +63,18 @@ const list = [
     icon: (props) => <BarChartIcon {...props} />,
   }
 ];
+const listEngineer = [
+  {
+    name: 'Испытания',
+    tabName: 'work',
+    icon: (props) => <RocketIcon {...props} />,
+  },
+]
+
 export default function Main() {
   const { selectedTab } = useSelector(state => state.ui);
   const { user } =  useSelector(state => state.auth);
+  const list = user.post === 'главный конструктор' ? listCostructor: listEngineer;
   const dispatch = useDispatch();
   const handleTab = (name) => () => {
     dispatch(selectTab(name));

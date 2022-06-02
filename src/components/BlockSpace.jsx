@@ -11,21 +11,20 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { ru } from 'date-fns/locale'
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+
 import { DesktopDatePicker } from '@mui/x-date-pickers/DesktopDatePicker';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
-import VisibilityIcon from '@mui/icons-material/Visibility';
+
 import CheckIcon from '@mui/icons-material/Check';
 import { Box, Paper, Button} from "@mui/material";
 import { addBlocks } from '../reducers/blockReducer';
 import apiRoutes from '../routes';
 
 
-export default function CheckboxList({ show }) {
-  const blocks = useSelector((state) => state.blocks);
+export default function BlockSpace({ show }) {
+  const { blocks } = useSelector((state) => state.blocks);
   const [date, setDate] = React.useState(new Date());
   const dispatch = useDispatch();
   useEffect(() => {
@@ -39,7 +38,7 @@ export default function CheckboxList({ show }) {
     }
    fetchData();
   }, []);
-  const [checked, setChecked] = React.useState([0]);
+  const [checked, setChecked] = React.useState([]);
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -58,18 +57,19 @@ export default function CheckboxList({ show }) {
     const launch = {
       name: data.get('name'),
       missionNumber: data.get('missionNumber'),
-      testStartDate: `${date.getDate()}T${date.getTime()}:00.000+00:00`,
-      date: date.getDate(),
-      time: date.getTime()
+      testStartDate: date,
     };
-    console.log(launch)
-    // try {
-    //   const url = apiRoutes('addNewLaunch')
-    //   const response = await axios.post(url, launch);
-    //   alert(response.data);
-    // } catch (error) {
-    //   console.log(error);
-    // }
+    console.log(checked);
+    const urlLaunch = apiRoutes('addNewLaunch');
+    const urlLaunchBlock = apiRoutes('addNewLaunchBlock');
+    try {
+      const response = await axios.post(urlLaunch, launch);
+      // await axios.all(checked.map((idBlock) => axios.post(urlLaunch, { idLaunch: 4, idBlock})));
+      // await axios.post(urlLaunch, { idLaunch: 4, idBlock: 1})
+      alert('Пуск добавлен!');
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

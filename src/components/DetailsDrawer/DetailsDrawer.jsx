@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Chip from '@mui/material/Chip';
@@ -9,35 +10,21 @@ import Divider from '@mui/material/Divider';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Tabs from '../Tabs';
 import Button from '@mui/material/Button';
-import QuestionMarkIcon from '@mui/icons-material/QuestionMark';
-import { TextField } from '@mui/material';
-import { flexbox } from '@mui/system';
 
 
-export default function DetailsDrawer() {
-  const [state, setState] = React.useState({
-    right: false,
-  });
+export default function DetailsDrawer(props) {
 
-  const toggleDrawer = (anchor, open) => (event) => {
-    if (
-      event &&
-      event.type === 'keydown' &&
-      (event.key === 'Tab' || event.key === 'Shift')
-    ) {
-      return;
-    }
-
-    setState({ ...state, [anchor]: open });
-  };
+  const { dialogs: { detail }, selectedOperationId} = useSelector(state => state.ui);
+  const historyOperations  = useSelector(state => state.historyOperation);
+  const operation = historyOperations.find((historyOperation) => historyOperation.id_history === selectedOperationId);
+  const { handleClose, handleOpen } = props;
 
   const list = (anchor) => (
     <Box
       sx={{ width: 400 }}
       role="presentation"
-      // onClick={toggleDrawer(anchor, false)}
-      onKeyDown={toggleDrawer(anchor, false)}
-      
+      onClick={handleClose}
+      onKeyDown={handleClose}
     >
       <Container>
         <Typography
@@ -52,9 +39,9 @@ export default function DetailsDrawer() {
           <Typography
             variant='body2'
           >
-          Операция 1
+          Операция {selectedOperationId}
           </Typography>
-          <Chip label="Остановлена" color="error" size="small" variant='outlined'/>
+          <Chip label={operation?.status} color="error" size="small" variant='outlined'/>
         </Box>
         <Divider />
         <Box
@@ -70,7 +57,7 @@ export default function DetailsDrawer() {
           <Tooltip title="Время начала">
             <Chip 
               avatar={<AccessTimeIcon style={{color: '#10B981'}}/>} 
-              label="00.00" 
+              label={operation?.timeStart}
               variant="outlined" 
               sx={{ border: 'none', fontWeight: 'bold'}}
             />
@@ -78,7 +65,7 @@ export default function DetailsDrawer() {
           <Tooltip title="Длительность">
             <Chip
               avatar={<AccessTimeIcon style={{color: '#10B981'}}/>}
-              label="06.00"
+              label={operation?.duration}
               variant="outlined" 
               sx={{ border: 'none', fontWeight: 'bold'}}
             />
@@ -95,7 +82,7 @@ export default function DetailsDrawer() {
             variant='subtitle2'
             sx={{ mt:1, mb: 2, color: 'grey'}}
           >
-          Выгрузка, проверка и приемка сопроводительной документации на изделия
+          {operation?.description}
         </Typography>
         <Box
           sx={{
@@ -124,13 +111,13 @@ export default function DetailsDrawer() {
     <div>
       {['right'].map((anchor) => (
         <React.Fragment key={anchor}>
-          {/* <Button onClick={toggleDrawer(anchor, true)}>{anchor}</Button> */}
+          <Button onClick={handleOpen}>{anchor}</Button>
           <SwipeableDrawer
             anchor={anchor}
-            open={state[anchor]}
+            open={detail.open}
             variant='persistent'
-            onClose={toggleDrawer(anchor, false)}
-            onOpen={toggleDrawer(anchor, true)}
+            onClose={handleClose}
+            onOpen={handleOpen}
           >
             {list(anchor)}
           </SwipeableDrawer>

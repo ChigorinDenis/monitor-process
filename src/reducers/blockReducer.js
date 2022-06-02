@@ -1,24 +1,34 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-const initialState = [];
+const initialState = {
+  blocks: [],
+  launchBlocks: [],
+};
 
 export const blockSlice = createSlice({
   name: 'block',
   initialState,
   reducers: {
     addBlocks: (state, { payload }) => {
-      return [...payload];
+      return {
+        ...state,
+        blocks: payload
+      };
     },
     addBlock: (state, { payload }) => {
-      return [...state, payload];
+      const { blocks } = state;
+      blocks.push(payload);
+      return;
     },
-    removeBlock: (state, { payload }) => {
-      const { id } = payload;
-      return state.filter((task) => task.id != id);
-    },
+    addLaunchBlocks: (state, { payload }) => {
+      return {
+        ...state,
+        launchBlocks: payload
+      };
+    }
   }
 });
 
-export const { addBlocks, addBlock, removeBlock } = blockSlice.actions;
+export const { addBlocks, addBlock, addLaunchBlocks } = blockSlice.actions;
 
 export default blockSlice.reducer;

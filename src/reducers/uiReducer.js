@@ -8,10 +8,19 @@ const initialState = {
       open: false,
       mode: 'add',
       data: {}
+    },
+    detail: {
+      open: false,
+      mode: '',
+      data: {}
     }
   },
   checkOperations: [],
   selectedOperationId: '',
+  startedLaunch: {
+    start: false,
+    id: null
+  }
 };
 
 export const uiSlice = createSlice({
@@ -38,7 +47,7 @@ export const uiSlice = createSlice({
     },
     openDialog : (state, { payload }) => {
       const { dialogs } = state;
-      const { dialogName, mode, data = '' } = payload;
+      const { dialogName, mode = '', data = '' } = payload;
       return {
         ...state,
         dialogs: {
@@ -70,6 +79,12 @@ export const uiSlice = createSlice({
         checkOperations: payload
       }
     },
+    startLaunch : (state, { payload }) => {
+      return {
+        ...state,
+        startedLaunch: payload
+      }
+    },
   }
 });
 
@@ -79,7 +94,8 @@ export const {
   openDialog,
   closeDialog,
   addCheckOperations,
-  selectOperationId
+  selectOperationId,
+  startLaunch
 } = uiSlice.actions;
 
 export default uiSlice.reducer;

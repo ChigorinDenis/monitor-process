@@ -21,7 +21,7 @@ import { updateFieldBlocks } from '../reducers/operationReducer'
 
 function AddBlockOperation(props) {
   const dispatch = useDispatch()
-  const blocks = useSelector(state => state.blocks);
+  const { blocks } = useSelector(state => state.blocks);
   const { checkOperations } = useSelector(state => state.ui);
   const { onClose, open } = props;
   const [idBlock, setIdBlock] = React.useState('');

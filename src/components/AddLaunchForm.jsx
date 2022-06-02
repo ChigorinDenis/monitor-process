@@ -15,7 +15,7 @@ import { Box, Paper } from "@mui/material";
 import { addBlocks } from '../reducers/blockReducer';
 import apiRoutes from '../routes';
 
-export default function CheckboxList({ show }) {
+export default function AddLaunchForm({ show }) {
   const blocks = useSelector((state) => state.blocks);
   const dispatch = useDispatch();
   useEffect(() => {
