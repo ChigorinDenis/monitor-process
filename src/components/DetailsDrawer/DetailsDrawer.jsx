@@ -111,7 +111,7 @@ export default function DetailsDrawer(props) {
     <div>
       {['right'].map((anchor) => (
         <React.Fragment key={anchor}>
-          <Button onClick={handleOpen}>{anchor}</Button>
+          {/* <Button onClick={handleOpen}>{anchor}</Button> */}
           <SwipeableDrawer
             anchor={anchor}
             open={detail.open}
