@@ -10,6 +10,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import HelpCenterIcon from '@mui/icons-material/HelpCenter';
 import EventAvailableIcon from '@mui/icons-material/EventAvailable';
 import EditIcon from '@mui/icons-material/Edit';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -24,6 +25,7 @@ import Checkbox from '@mui/material/Checkbox';
 import ToolbarTable from '../ToolbarTable';
 import { addOperations } from '../../reducers/operationReducer';
 import { addCheckOperations } from "../../reducers/uiReducer";
+import AddErrorGuiides from '../AddErrorGuides';
 import { openDialog } from '../../reducers/uiReducer';
 import apiRoutes from '../../routes'
 
@@ -126,12 +128,6 @@ export default function BasicTable() {
           </Button>
         </div>
       </Box>
-      {/* <FormControlLabel
-        control={
-          <Switch  color='info' onChange={() => {setStateBlocks(!showBlocks)}}/>
-        }
-        label="Показать блоки" 
-      /> */}
       <Box
         sx={{display: 'flex'}}
       >
@@ -202,16 +198,30 @@ export default function BasicTable() {
                           }))
                         }
                         }
+                        title="Редактирование"
                       >
                         <EditIcon />
                       </IconButton>
-                      <IconButton
+                      {/* <IconButton
                         size='small'
                         sx={{ '&:hover': {color: '#f44336'}}}
                         onClick={handleRemove(row.id)}
                       >
                         <DeleteIcon />
+                      </IconButton> */}
+                      <IconButton
+                        size='small'
+                        sx={{ '&:hover': {color: '#1de9b6'}}}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          dispatch(openDialog({dialogName: 'errorGuides', data: {id_operation: row.id}}))
+                        }}
+                        title="Руководство неисправностей"
+  
+                      >
+                        <HelpCenterIcon />
                       </IconButton>
+                      
                     </TableCell>
                   </TableRow>
                 ))}
@@ -224,6 +234,7 @@ export default function BasicTable() {
         open={operationDialog.open}
         onClose={handleClose} 
       />
+      <AddErrorGuiides onClose={handleClose} />
     </>
   );
 }

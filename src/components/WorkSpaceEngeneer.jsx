@@ -14,24 +14,9 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Chip from '@mui/material/Chip';
 import apiRoutes from '../routes';
 import { minuteToFormatStr } from '../utils/utils';
+import { renderChipStatus } from '../utils/utils';
 
-const renderChipStatus = (status) => {
-  const statusToColor = {
-    'CREATED': 'info',
-    'STOPPED': 'error',
-    'INPROGRESS': 'secondary'
-  };
-  const statusToText = {
-    'CREATED': 'Не начата',
-    'STOPPED': 'Остановлена',
-    'INPROGRESS': 'Запущена'
-  };
-  const color = statusToColor[status];
-  const text = statusToText[status];
-  return (
-    <Chip label={text} variant="outlined" color={color} size="small" />
-  )
-}
+
 
 const WorkSpaceEngeneer = ({data}) => {
   const dispatch = useDispatch();

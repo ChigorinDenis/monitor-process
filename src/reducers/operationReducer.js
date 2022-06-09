@@ -20,7 +20,7 @@ export const operationSlice = createSlice({
       return [...payload];
     },
     addOperation: (state, { payload }) => {
-      return [...state, payload];
+       return [...state, payload];
     },
     updateOperation: (state, { payload }) => {
       const { id, timeStart, duration, description, blocks } = payload;

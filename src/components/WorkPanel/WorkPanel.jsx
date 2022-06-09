@@ -3,49 +3,37 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import Typography from '@mui/material/Typography';
 import { Button, Box, ToggleButtonGroup, ToggleButton } from "@mui/material";
-import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import StopCircleIcon from '@mui/icons-material/StopCircle';
-import  TaskTooltip  from '../Tooltip';
-import { addLaunchBlocks } from "../../reducers/blockReducer";
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { addHistoryOperations } from "../../reducers/historyOperationReducer";
+import { changeBlock } from "../../reducers/blockReducer";
+import { startLaunch } from "../../reducers/uiReducer";
 import apiRoutes from '../../routes';
 
-const WorkPanel = ({startedLaunch}) => {
-  const [alignment, setAlignment] = React.useState('unit1');
-  // const { startedLaunch } = useSelector((state) => state.ui);
-  const { launchBlocks } = useSelector((state) => state.blocks);
+const WorkPanel = () => {
+  const { entities, idBlockActive } = useSelector((state) => state.blocks);
+  const { startedLaunch } = useSelector((state) => state.ui);
   const dispatch = useDispatch();
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {   
-  //       const response = await axios.get(apiRoutes('getBlocksByLaunch')(1));
-  //       dispatch(addLaunchBlocks(response.data));
-  //     } catch(err) {    
-  //       console.log(err);
-  //     }
-  //   }
-  //  fetchData();
-  // }, []);
 
-  useEffect(() => {
+   useEffect(() => {
     const delta = 1000;
     const fetchData = async () => {
-      const url = apiRoutes('getHistoryOperationsByBlock')(1, 1);
-      try {    
-        const response = await axios.get(url);
-        dispatch(addHistoryOperations(response.data));
+      const url = apiRoutes('getHistoryOperationsByLaunch')(startedLaunch.id);
+      try {   
+         if (idBlockActive) {
+           const response = await axios.get(url);
+           dispatch(addHistoryOperations(response.data));
+         }   
       } catch(err) {    
         console.log(err);
       }
     }
-    
     setInterval(() => {
       fetchData();
     }, delta);
-  }, []);
+  }, [idBlockActive]);
 
-  const handleChange = (event, newAlignment) => {
-    setAlignment(newAlignment);
+  const handleChange = (event, idBlock) => {
+    dispatch(changeBlock((idBlock)));
   };
   return (
     <>
@@ -63,59 +51,41 @@ const WorkPanel = ({startedLaunch}) => {
         >
           Испытания
         </Typography>
-        {/* <Box>
-          <TaskTooltip>
-          <Button
-            variant='contained'
-            startIcon={<PlayArrowIcon />}
-            size='small'
-            color='secondary'
-            sx={{mr:1, color: '#fff', boxShadow: 'none'}}
-            onClick={() => {
-              engine.postRunTask(selectedTask.id);
-            }}
-          >
-            Запуск
-          </Button>
-          </TaskTooltip>
-          <Button
-            variant='outlined'
-            startIcon={<StopCircleIcon />}
-            size='small'
-            color='error'
-            onClick={() => {
-              engine.postStopTask(selectedTask.id);
-            }}
-          >
-            Остановить
-          </Button>
-        </Box> */}
+        <Box>
+          {
+            !startLaunch.start && <Button
+              variant='outlined'
+              startIcon={<ArrowBackIcon />}
+              size='small'
+              color='info'
+              sx={{ boxShadow: 'none'}}
+              onClick={() => {
+                dispatch(startLaunch({ id: null, start: false}));
+              }}
+            >
+              К списку испытаний
+            </Button>
+          }
+        </Box>
       </Box>
       <Box>
         <ToggleButtonGroup
           exclusive
           size="small"
           color="info"
-          value={alignment}
+          value={ idBlockActive }
           onChange={handleChange}
           sx={{ 
             mb: 2,
           }} 
         >
-          {launchBlocks.map((block) => {
+          {entities.map((block) => {
             return (
-              <ToggleButton value={block.id}>
+              <ToggleButton value={block.id} key={block.id}>
                 {block.name}
               </ToggleButton>
             )
-          })}
-          {/* <ToggleButton value="unit1">
-            Изделие 1
-          </ToggleButton>
-          <ToggleButton value="unit2">
-            Изделие 2
-          </ToggleButton> */}
-         
+          })}         
         </ToggleButtonGroup>
       </Box>
  

@@ -13,39 +13,35 @@ import { addOperation, updateOperation } from '../reducers/operationReducer';
 import { closeDialog } from '../reducers/uiReducer';
 import apiRoutes from '../routes';
 
-function AddOperationForm(props) {
+function AddErrorGuides(props) {
   const dispatch = useDispatch()
   const { dialogs } = useSelector(state => state.ui);
-  const { operation } = dialogs;
-  const { onClose, open } = props;
-
+  
   const handleClose = () => {
-    dispatch(closeDialog({dialogName: 'operation' }));
+    dispatch(closeDialog({dialogName: 'errorGuides' }));
   };
 
-  const handleSubmit = (operationDialog) => async (event) => {
+  const handleSubmit  = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const newData = {
-      timeStart: data.get('timeStart'),
-      duration: data.get('duration'),
-      description: data.get('description'),
-      order: data.get('ordr'),
-      blocks: [],
+      manifestation: data.get('manifestation'),
+      search: data.get('search'),
+      removal: data.get('removal'),
+      control: data.get('control'),
     };
-    const url = operationDialog.mode === 'add' ? apiRoutes('addNewOperation'): apiRoutes('editOperation');
-    const operation = operationDialog.mode === 'add' ? newData : { id: operationDialog.data.id, ...newData};
+    const url = apiRoutes('addNewErrorGuide')(dialogs?.errorGuides?.data?.id_operation);
     try {
-      const response = await axios.post(url, operation);
-      operationDialog.mode === 'add' ? dispatch(addOperation(operation)) : dispatch(updateOperation(operation));
+      const response = await axios.post(url, newData);
+      alert('Добавлена ошибка')
     } catch (e) {
       alert(e);
     }
     handleClose();
   };
   return (
-    <Dialog onClose={handleClose} open={open}>
-      <DialogTitle>{operation.mode === 'add' ? 'Добавить операцию': ' Редактировать операцию'}</DialogTitle>
+    <Dialog onClose={handleClose} open={dialogs.errorGuides.open}>
+      <DialogTitle>Руководство по ошибкам</DialogTitle>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -56,36 +52,28 @@ function AddOperationForm(props) {
             alignItems: 'center',
           }}
         >
-          <Box component="form" noValidate onSubmit={handleSubmit(operation)} sx={{ mt: 1 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={4}>
+          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={12}>
                 <TextField
-                  name="timeStart"
+                  name="manifestation"
                   required
                   fullWidth
-                  defaultValue={operation.mode === 'edit' ? operation.data.timeStart : ''}
-                  label="Время Начала"
-                  placeholder='В минутах'
+                  label="Проявление ошибки"
+                  maxRows={4}
+                  minRows={2}
                   autoFocus
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={12} sm={12}>
                 <TextField
-                  name="duration"
+                  name="search"
                   required
                   fullWidth
-                  label="Длительность"
-                  defaultValue={operation.mode === 'edit' ? operation.data.duration : ''}
-                  placeholder='В минутах'  
-                />
-              </Grid>
-              <Grid item xs={4}>
-                <TextField
-                  name="ordr"
-                  required
-                  fullWidth
-                  label="Порядок"
-                  defaultValue={operation.mode === 'edit' ? operation.data.order : ''}
+                  label="Способ отыскания"
+                  multiline
+                  maxRows={4}
+                  minRows={2}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -93,11 +81,21 @@ function AddOperationForm(props) {
                   required
                   fullWidth
                   multiline
-                  defaultValue={operation.mode === 'edit' ? operation.data.description : ''}
                   maxRows={4}
                   minRows={2}
-                  label="Описание Операции "
-                  name="description"
+                  label="Способ устранения"
+                  name="removal"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  multiline
+                  maxRows={4}
+                  minRows={2}
+                  label="Контроль"
+                  name="control"
                 />
               </Grid>
             </Grid>
@@ -108,7 +106,7 @@ function AddOperationForm(props) {
               color='secondary'
               sx={{ mt: 3, mb: 2, color: '#fff', boxShadow: 'none' }} 
             >
-              {operation.mode === 'add' ? 'Добавить': ' Редактировать'}
+              Добавить
             </Button>
           </Box>
         </Box>
@@ -117,7 +115,7 @@ function AddOperationForm(props) {
   );
 }
 
-export default AddOperationForm;
+export default AddErrorGuides;
 
 
 

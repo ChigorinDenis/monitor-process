@@ -7,7 +7,7 @@ import store from "../../store";
 import { selectTask, selectOperationId } from "../../reducers/uiReducer";
 import ContexMenu from "../ContexMenu";
 import apiRoutes from '../../routes';
-const cols = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+const cols = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
 
 
 const GanntTable = ({ data }) => {
@@ -99,14 +99,12 @@ const GanntTable = ({ data }) => {
   }
   
   const buildCol = (timeStart, duration, percent, i, id, id_history) => {
-    // const [hourStart, minuteStart] = timeStart.split('.').map(Number);
     const [hourStart, minuteStart] = minuteToFormat(timeStart)
     if (hourStart!= i ) {
       return (
         <td key={i}></td>
       );
     } 
-    // const progressWidth = Math.round(calcProgress(duration, progress));
     return (
       <td key={`col${i}`} style={{position:'relative'}}>
         {buildTask(duration, minuteStart, Number(percent.toFixed(2)), id, id_history)}
@@ -119,12 +117,11 @@ const GanntTable = ({ data }) => {
   };
   
   const buildTask = (duration, minuteStart, percent, id, id_history) => {
-    // const [hourDuration, minuteDuration] = duration.split('.').map(Number);
     const [hourDuration, minuteDuration] = minuteToFormat(duration);
     const minuteDurationPer = `${((minuteDuration / 60) * 100) + (hourDuration * 100)}%`;
     const num = `${hourDuration - 1}px`;
     const width = `calc(${minuteDurationPer} + ${num})`;
-    // const overWidth = `calc(${minuteDurationPer} + ${num} + ')`;
+    const leftHint = `calc(${minuteDurationPer} + ${num + 5})`;
     const overWidth =`${((minuteDuration / 60) * percent) + (hourDuration * percent)}%`
     const left = `${(minuteStart / 60) * 100}%`;
     return (
@@ -136,10 +133,12 @@ const GanntTable = ({ data }) => {
             className="task"
             style={{width, left}}
             onContextMenu={handleContextMenu(id_history)}
+            onMo
           >
             <div className="task__progress" style={{width: `${percent}%`}}></div>
-            <span className="task__badge">{`${percent}%`}</span>
-          </div>   
+            <span className="task__badge">{`${percent < 100 ? percent : 100 }%`}</span>
+          </div> 
+          {/* <span className="task__hint" style={{left: leftHint}}></span>  */}
         </>
       </TaskTooltip>
     );
@@ -167,6 +166,16 @@ const GanntTable = ({ data }) => {
               <th>10.00</th>
               <th>11.00</th>
               <th>12.00</th>
+              <th>14.00</th>
+              <th>15.00</th>
+              <th>16.00</th>
+              <th>17.00</th>
+              <th>18.00</th>
+              <th>19.00</th>
+              <th>20.00</th>
+              <th>21.00</th>
+              <th>22.00</th>
+              <th>23.00</th>
             </tr>
           </thead>
           <tbody>

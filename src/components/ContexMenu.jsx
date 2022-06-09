@@ -47,6 +47,7 @@ export default function ContextMenu( props ) {
         <MenuItem onClick={() => {
           handleStopOperation();
           handleClose();
+          dispatch(openDialog({ dialogName: 'guides'}))
         }}>
           <StopCircleIcon color='error' sx={{mr:2}}/>
           Остановить

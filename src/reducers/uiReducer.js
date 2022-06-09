@@ -13,10 +13,21 @@ const initialState = {
       open: false,
       mode: '',
       data: {}
-    }
+    },
+    errorGuides: {
+      open: false,
+      mode: '',
+      data: {}
+    },
+    guides: {
+      open: false,
+      mode: '',
+      data: {}
+    },
   },
   checkOperations: [],
   selectedOperationId: '',
+  selectedBlockId: '',
   startedLaunch: {
     start: false,
     id: null
@@ -31,6 +42,12 @@ export const uiSlice = createSlice({
       return {
         ...state,
         selectedOperationId: payload
+      }
+    },
+    selectBlockId : (state, { payload }) => {
+      return {
+        ...state,
+        selectedBlockId: payload
       }
     },
     selectTask : (state, { payload }) => {
@@ -95,6 +112,7 @@ export const {
   closeDialog,
   addCheckOperations,
   selectOperationId,
+  selectBlockId,
   startLaunch
 } = uiSlice.actions;
 

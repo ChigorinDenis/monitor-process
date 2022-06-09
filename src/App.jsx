@@ -22,8 +22,9 @@ export default () => {
     <ThemeProvider theme={theme}>
       <Header />
       <Routes>
-        <Route path="/" element={<SignIn/>} />
-        <Route path="/main" element={<Main />} />
+      
+      <Route path="/" element={<SignIn/>} />
+      <Route path="/main" element={<Main />} />
       </Routes>
     </ThemeProvider>
   ) 

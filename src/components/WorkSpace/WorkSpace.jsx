@@ -10,12 +10,37 @@ import LaunchSpace from "../LaunchSpace";
 import apiRoutes from '../../routes';
 import { addHistoryOperations } from "../../reducers/historyOperationReducer";
 import { closeDialog, openDialog } from '../../reducers/uiReducer';
+import groupBy from "lodash.groupby";
+import ErrorGuide from "../ErrorGuide";
+
 
 const WorkSpace = () => {
   const { user } = useSelector(state => state.auth);
   const historyOperation = useSelector((state) => state.historyOperation);
   const { startedLaunch } = useSelector((state) => state.ui);
+  const { idBlockActive } = useSelector((state) => state.blocks);
   const dispatch = useDispatch();
+
+  const renderGanntTables = () => {
+    const groupedHistoryOperation  = groupBy(historyOperation, (item) => (item.id_block))
+    return (
+      Object.entries(groupedHistoryOperation).map(([id_block, operations]) => { 
+        return (
+            Number(id_block) === idBlockActive && <GanntTable data={operations} />
+        )
+      })
+    )
+  }
+  const renderTables = () => {
+    const groupedHistoryOperation  = groupBy(historyOperation, (item) => (item.id_block))
+    return (
+      Object.entries(groupedHistoryOperation).map(([id_block, operations]) => { 
+        return (
+            Number(id_block) === idBlockActive && <WorkSpaceEngeneer data={operations} />
+        )
+      })
+    )
+  }
 
   const renderLaunchWork = () => {
     const { start } = startedLaunch;
@@ -23,7 +48,7 @@ const WorkSpace = () => {
       return <LaunchSpace />
     }
     return (
-      user.post === 'главный конструктор' ? <GanntTable data={historyOperation} /> : <WorkSpaceEngeneer data={historyOperation} />
+      user.post === 'главный конструктор' ? renderGanntTables() : renderTables()
     )
   }
 
@@ -31,7 +56,7 @@ const WorkSpace = () => {
   //   const delta = 1000;
   //   const fetchData = async () => {
   //     try {   
-  //       const url = apiRoutes('getHistoryOperationsByBlock');
+  //       const url = apiRoutes('getHistoryOperationsByBlock')(3, 1);
   //       const response = await axios.get(url);
   //       dispatch(addHistoryOperations(response.data));
   //     } catch(err) {    
@@ -70,7 +95,8 @@ const WorkSpace = () => {
          handleOpen={handleOpen('detail')}
        />
       }
-      <AddErrorForm />    
+      <AddErrorForm /> 
+      <ErrorGuide />   
     </>
   )
 }

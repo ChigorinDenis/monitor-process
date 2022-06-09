@@ -58,14 +58,13 @@ export default function BlockSpace({ show }) {
       name: data.get('name'),
       missionNumber: data.get('missionNumber'),
       testStartDate: date,
+      idBlocks: checked.map((id) => ({ id }))
     };
     console.log(checked);
     const urlLaunch = apiRoutes('addNewLaunch');
-    const urlLaunchBlock = apiRoutes('addNewLaunchBlock');
+    const urlLaunchWithBlocks = apiRoutes('addNewLaunchWithBlocks');
     try {
-      const response = await axios.post(urlLaunch, launch);
-      // await axios.all(checked.map((idBlock) => axios.post(urlLaunch, { idLaunch: 4, idBlock})));
-      // await axios.post(urlLaunch, { idLaunch: 4, idBlock: 1})
+      const response = await axios.post(urlLaunchWithBlocks, launch);
       alert('Пуск добавлен!');
     } catch (error) {
       console.log(error);

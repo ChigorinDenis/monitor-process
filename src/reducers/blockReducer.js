@@ -1,13 +1,28 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit';
+import axios from 'axios';
+import routes from '../routes';
 
-const initialState = {
-  blocks: [],
-  launchBlocks: [],
-};
+export const fetchBlocksByLaunch = createAsyncThunk(
+  'blocks/fetchBlocksByLaunch',
+  async (launchId) => {
+    const url = routes('getBlocksByLaunch')(launchId);
+    const response = await axios.get(url);
+    return response.data;
+  }
+);
+
+const blocksAdapter = createEntityAdapter();
+
 
 export const blockSlice = createSlice({
   name: 'block',
-  initialState,
+  initialState: blocksAdapter.getInitialState({
+    entities: [],
+    blocks: [],
+    idBlockActive: '',
+    loading: 'idle',
+    error: null 
+  }),
   reducers: {
     addBlocks: (state, { payload }) => {
       return {
@@ -20,15 +35,32 @@ export const blockSlice = createSlice({
       blocks.push(payload);
       return;
     },
+    changeBlock: (state, { payload }) => {
+      state.idBlockActive = payload;
+    },
     addLaunchBlocks: (state, { payload }) => {
+      const [ firstBlock ] = payload;
       return {
         ...state,
+        idBlockActive: firstBlock?.id,
         launchBlocks: payload
       };
     }
-  }
+  },
+  extraReducers: (builder) => {
+    // Add reducers for additional action types here, and handle loading state as needed
+    builder.addCase(fetchBlocksByLaunch.fulfilled, (state, { payload }) => {
+      state.entities = [...payload];
+      state.loading = 'idle';
+      state.error = null;
+    })
+    .addCase(fetchBlocksByLaunch.rejected, (state, action) => {
+      state.loading = 'failed';
+      state.error = action.error;
+    })
+  },
 });
 
-export const { addBlocks, addBlock, addLaunchBlocks } = blockSlice.actions;
+export const { addBlocks, addBlock, addLaunchBlocks, changeBlock } = blockSlice.actions;
 
 export default blockSlice.reducer;

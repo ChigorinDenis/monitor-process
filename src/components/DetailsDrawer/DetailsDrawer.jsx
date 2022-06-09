@@ -10,7 +10,9 @@ import Divider from '@mui/material/Divider';
 import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import Tabs from '../Tabs';
 import Button from '@mui/material/Button';
-
+import TimelapseIcon from '@mui/icons-material/Timelapse';
+import { renderChipStatus } from '../../utils/utils';
+import { minuteToFormatStr } from '../../utils/utils';
 
 export default function DetailsDrawer(props) {
 
@@ -39,9 +41,18 @@ export default function DetailsDrawer(props) {
           <Typography
             variant='body2'
           >
-          Операция {selectedOperationId}
+            Операция {selectedOperationId}
           </Typography>
-          <Chip label={operation?.status} color="error" size="small" variant='outlined'/>
+          <Box sx={{
+            display: 'flex',
+            flexDirection: 'column'
+          }}>
+            {renderChipStatus(operation?.status)}
+            <Typography>
+            
+            </Typography>
+          </Box>
+          
         </Box>
         <Divider />
         <Box
@@ -57,7 +68,7 @@ export default function DetailsDrawer(props) {
           <Tooltip title="Время начала">
             <Chip 
               avatar={<AccessTimeIcon style={{color: '#10B981'}}/>} 
-              label={operation?.timeStart}
+              label={minuteToFormatStr(operation?.timeStart)}
               variant="outlined" 
               sx={{ border: 'none', fontWeight: 'bold'}}
             />
@@ -65,7 +76,15 @@ export default function DetailsDrawer(props) {
           <Tooltip title="Длительность">
             <Chip
               avatar={<AccessTimeIcon style={{color: '#10B981'}}/>}
-              label={operation?.duration}
+              label={minuteToFormatStr(operation?.duration)}
+              variant="outlined" 
+              sx={{ border: 'none', fontWeight: 'bold'}}
+            />
+          </Tooltip>
+          <Tooltip title="Задержка">
+            <Chip
+              avatar={<TimelapseIcon style={{color: '#f44336'}}/>} 
+              label={`${operation?.duration} мин.`}
               variant="outlined" 
               sx={{ border: 'none', fontWeight: 'bold'}}
             />

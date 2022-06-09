@@ -9,8 +9,13 @@ export const taskSlice = createSlice({
     addHistoryOperations: (state, { payload }) => {
       return [ ...payload ];
     },
-    updateTasks: (state, { payload }) => {
-      return payload;
+    updatePercent: (state, { payload }) => {
+      payload.forEach((item) => {
+        const { id_history, percent } = item;
+        const needUpdate = find((need) => need.id_history === id_history);
+        
+        needUpdate.percent = percent;
+      })
     },
     removeTask: (state, { payload }) => {
       const { id } = payload;
@@ -19,6 +24,6 @@ export const taskSlice = createSlice({
   }
 });
 
-export const { addHistoryOperations, updateTasks, removeTask } = taskSlice.actions;
+export const { addHistoryOperations, updatePercent, removeTask } = taskSlice.actions;
 
 export default taskSlice.reducer;

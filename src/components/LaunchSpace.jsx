@@ -14,6 +14,7 @@ import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import { Box } from "@mui/material";
 import { addLaunches } from '../reducers/launchReducer';
 import { startLaunch } from '../reducers/uiReducer';
+import { fetchBlocksByLaunch } from '../reducers/blockReducer';
 import apiRoutes from '../routes';
 
 
@@ -30,10 +31,11 @@ const LaunchSpace = () => {
         }
       }
      fetchData();
-    }, []);
+    }, [rows]);
 
     const handleLaunch = (id) => () => {
       dispatch(startLaunch({ id, start: true}));
+      dispatch(fetchBlocksByLaunch(id));
     }
 
   return (
