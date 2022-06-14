@@ -46,37 +46,51 @@ function a11yProps(index) {
     'aria-controls': `simple-tabpanel-${index}`,
   };
 }
-const Table1 = () => {
+const Table1 = ({ data }) => {
   return (
     <TableContainer component={Paper} sx={{fontSize: '8px'}}>
         <Table sx={{fontSize: '8px'}}>
           <TableHead>
             <TableRow>
-              <TableCell>Время</TableCell>
-              <TableCell>Причина</TableCell>
-              <TableCell>Инженер</TableCell>
+              <TableCell>Название</TableCell>
+              <TableCell>Описание</TableCell>
+              <TableCell>Время регисрации</TableCell>
+              <TableCell>Решение</TableCell>
+              <TableCell>Статус</TableCell>
+              <TableCell>Работник</TableCell>
             </TableRow>
           </TableHead>
-            <TableRow>
-              <TableCell>02.35</TableCell>
-              <TableCell>Отказ блока РН</TableCell>
-              <TableCell>Сидоров С.Е</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>04.00</TableCell>
-              <TableCell>Отказ блока РН</TableCell>
-              <TableCell>Сидоров С.Е</TableCell>
-            </TableRow>
           <TableBody>
+            {data.map((row) => {
+              const {
+                id,
+                name,
+                status,
+                detectionTime,
+                info,
+                solution,
+                historyOperation
+              } = row;
+              return (
+                <TableRow key={id}>
+                  <TableCell>{name}</TableCell>
+                  <TableCell>{info}</TableCell>
+                  <TableCell>{historyOperation.timeActual.slice(0,10)}</TableCell>
+                  <TableCell>{status}</TableCell>
+                  <TableCell>{solution}</TableCell>
+                  <TableCell>{historyOperation?.user?.fio}</TableCell>
+                </TableRow>
+              )
+
+            })}
            
           </TableBody>
         </Table>
       </TableContainer>
   )
 }
-export default function BasicTabs() {
+export default function BasicTabs({ data }) {
   const [value, setValue] = React.useState(0);
-
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -90,7 +104,7 @@ export default function BasicTabs() {
     //     </Tabs>
     //   </Box>
     //   <TabPanel value={value} index={0} style={{ padding: 0}}>
-        <Table1 />
+        <Table1 data={data}/>
     //   </TabPanel>
     //   <TabPanel value={value} index={1}>
     //     Item Two

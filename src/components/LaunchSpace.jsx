@@ -15,6 +15,7 @@ import { Box } from "@mui/material";
 import { addLaunches } from '../reducers/launchReducer';
 import { startLaunch } from '../reducers/uiReducer';
 import { fetchBlocksByLaunch } from '../reducers/blockReducer';
+import { addHistoryOperations } from '../reducers/historyOperationReducer';
 import apiRoutes from '../routes';
 
 
@@ -35,6 +36,7 @@ const LaunchSpace = () => {
 
     const handleLaunch = (id) => () => {
       dispatch(startLaunch({ id, start: true}));
+      dispatch(addHistoryOperations([]));
       dispatch(fetchBlocksByLaunch(id));
     }
 

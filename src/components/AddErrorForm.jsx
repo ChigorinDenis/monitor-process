@@ -15,12 +15,12 @@ import apiRoutes from '../routes';
 
 function AddErrorForm(props) {
   const dispatch = useDispatch()
-  const { dialogs } = useSelector(state => state.ui);
+  const { dialogs, selectedOperation } = useSelector(state => state.ui);
   const { operation } = dialogs;
   const { onClose, open } = props;
 
   const handleClose = () => {
-    dispatch(closeDialog({dialogName: 'operation' }));
+    dispatch(closeDialog({dialogName: 'guides' }));
   };
 
   const handleSubmit = (operationDialog) => async (event) => {
@@ -31,32 +31,30 @@ function AddErrorForm(props) {
       info: data.get('info'),
       solution: data.get('solution'),
       detectionTime: 234,
-      id_ho:1
+      id_ho: selectedOperation.id_history
     };
     const url = apiRoutes('addNewOperationError');
-    // const operation = operationDialog.mode === 'add' ? newData : { id: operationDialog.data.id, ...newData};
     try {
       const response = await axios.post(url, newData);
       alert('Добавлена ошибка')
-    //   operationDialog.mode === 'add' ? dispatch(addOperation(operation)) : dispatch(updateOperation(operation));
     } catch (e) {
       alert(e);
     }
     handleClose();
   };
   return (
-    <Dialog onClose={handleClose} open={open}>
-      <DialogTitle>{operation.mode === 'add' ? 'Добавить операцию': ' Редактировать операцию'}</DialogTitle>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 2,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
+    // <Dialog onClose={handleClose} open={true}>
+    //   <DialogTitle>{operation.mode === 'add' ? 'Добавить операцию': ' Редактировать операцию'}</DialogTitle>
+    //   <Container component="main" maxWidth="xs">
+    //     <CssBaseline />
+        // <Box
+        //   sx={{
+        //     marginTop: 2,
+        //     display: 'flex',
+        //     flexDirection: 'column',
+        //     alignItems: 'center',
+        //   }}
+        // >
           <Box component="form" noValidate onSubmit={handleSubmit(operation)} sx={{ mt: 1 }}>
             <Grid container spacing={3}>
               <Grid item xs={12} sm={12}>
@@ -64,7 +62,6 @@ function AddErrorForm(props) {
                   name="name"
                   required
                   fullWidth
-                  defaultValue={operation.mode === 'edit' ? operation.data.timeStart : ''}
                   label="Название ошибки"
                   autoFocus
                 />
@@ -78,7 +75,6 @@ function AddErrorForm(props) {
                   multiline
                   maxRows={4}
                   minRows={2}
-                  defaultValue={operation.mode === 'edit' ? operation.data.duration : ''}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -86,7 +82,6 @@ function AddErrorForm(props) {
                   required
                   fullWidth
                   multiline
-                  defaultValue={operation.mode === 'edit' ? operation.data.description : ''}
                   maxRows={4}
                   minRows={2}
                   label="Решение"
@@ -102,12 +97,12 @@ function AddErrorForm(props) {
               color='secondary'
               sx={{ mt: 3, mb: 2, color: '#fff', boxShadow: 'none' }} 
             >
-              {operation.mode === 'add' ? 'Добавить': ' Редактировать'}
+              Добавить
             </Button>
           </Box>
-        </Box>
-      </Container>
-    </Dialog>
+        // </Box>
+    //   </Container>
+    // </Dialog>
   );
 }
 

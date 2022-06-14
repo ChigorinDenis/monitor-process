@@ -19,6 +19,8 @@ import { Container } from '@mui/material';
 import WorkSpace from '../WorkSpace/WorkSpace';
 import PlanningSpace from '../PlanningSpace/PlanningSpace';
 import StatisticSpace from '../StatisticSpace/StatisticSpace';
+import AllErrorsGuideTable from '../AllErrorsGuideTable';
+import StatisticOperation from '../StatisticOperation';
 import PersonSpace  from  '../PersonSpace/PersonSpace';
 import { selectTab } from '../../reducers/uiReducer';
 
@@ -37,7 +39,7 @@ const getTab = (name) => {
     work: <WorkSpace />,
     plan: <PlanningSpace />,
     personal: <PersonSpace />,
-    statistic: <StatisticSpace />
+    statistic: <AllErrorsGuideTable />
   };
   return mappingName[name];
 }
@@ -74,7 +76,7 @@ const listEngineer = [
 export default function Main() {
   const { selectedTab } = useSelector(state => state.ui);
   const { user } =  useSelector(state => state.auth);
-  const list = user.post === 'главный конструктор' ? listCostructor: listEngineer;
+  const list = user.post === 'Главный конструктор' ? listCostructor: listEngineer;
   const dispatch = useDispatch();
   const handleTab = (name) => () => {
     dispatch(selectTab(name));

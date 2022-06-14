@@ -45,7 +45,10 @@ export const blockSlice = createSlice({
         idBlockActive: firstBlock?.id,
         launchBlocks: payload
       };
-    }
+    },
+    clearBlockEntities: (state) => {
+      state.entities = [];
+    },
   },
   extraReducers: (builder) => {
     // Add reducers for additional action types here, and handle loading state as needed
@@ -61,6 +64,6 @@ export const blockSlice = createSlice({
   },
 });
 
-export const { addBlocks, addBlock, addLaunchBlocks, changeBlock } = blockSlice.actions;
+export const { addBlocks, addBlock, addLaunchBlocks, changeBlock, clearBlockEntities } = blockSlice.actions;
 
 export default blockSlice.reducer;

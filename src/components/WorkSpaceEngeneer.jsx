@@ -12,9 +12,11 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import StopCircleIcon from '@mui/icons-material/StopCircle';
 import CircularProgress from '@mui/material/CircularProgress';
 import Chip from '@mui/material/Chip';
+import IconButton from '@material-ui/core/IconButton';
 import apiRoutes from '../routes';
 import { minuteToFormatStr } from '../utils/utils';
 import { renderChipStatus } from '../utils/utils';
+import { openDialog } from '../reducers/uiReducer';
 
 
 
@@ -46,8 +48,8 @@ const WorkSpaceEngeneer = ({data}) => {
     }
   }
   return (
-    <TableContainer component={Paper} sx={{fontSize: '8px'}}>
-        <Table sx={{fontSize: '8px'}}>
+    <TableContainer component={Paper} sx={{fontSize: '8px', maxHeight: '700px', minHeight: '700px'}}>
+        <Table sx={{fontSize: '8px'}} stickyHeader>
           <TableHead>
             <TableRow>
               <TableCell>Операция</TableCell>
@@ -68,7 +70,8 @@ const WorkSpaceEngeneer = ({data}) => {
                   timeStart,
                   duration,
                   status,
-                  percent
+                  percent,
+                  active
                 } = historyOperation;
                 return (
                   <TableRow key={id_history}>
@@ -81,15 +84,20 @@ const WorkSpaceEngeneer = ({data}) => {
                       {status === 'INPROGRESS' && <CircularProgress  value={percent} size={10} sx={{ml: 1}} color="info" />}
                       </TableCell>
                     <TableCell>
+                      
                       <PlayArrowIcon
                       sx={{mr:2, cursor: 'pointer',}}
+                      
                       color='error'
                       onClick={handleRunOperation(id_history)}
                     />
                       <StopCircleIcon
                         sx={{ cursor: 'pointer'}}
                         color='secondary'
-                        onClick={handleStopOperation(id_history)}
+                        onClick={() => {
+                          handleStopOperation(id_history)();
+                          dispatch(openDialog({ dialogName: 'guides'}))
+                        }}
                       />
                     </TableCell>
                   </TableRow>

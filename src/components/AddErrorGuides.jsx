@@ -60,6 +60,7 @@ function AddErrorGuides(props) {
                   required
                   fullWidth
                   label="Проявление ошибки"
+                  multiline
                   maxRows={4}
                   minRows={2}
                   autoFocus
@@ -70,7 +71,7 @@ function AddErrorGuides(props) {
                   name="search"
                   required
                   fullWidth
-                  label="Способ отыскания"
+                  label="Метод поиска"
                   multiline
                   maxRows={4}
                   minRows={2}

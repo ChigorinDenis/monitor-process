@@ -18,12 +18,14 @@ export const renderChipStatus = (status) => {
     const statusToColor = {
       'CREATED': 'info',
       'STOPPED': 'error',
-      'INPROGRESS': 'secondary'
+      'INPROGRESS': 'primary',
+      'COMPLETED': 'secondary'
     };
     const statusToText = {
       'CREATED': 'Не начата',
       'STOPPED': 'Остановлена',
-      'INPROGRESS': 'Запущена'
+      'INPROGRESS': 'Запущена',
+      'COMPLETED': 'Завершена'
     };
     const color = statusToColor[status];
     const text = statusToText[status];

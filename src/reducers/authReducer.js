@@ -1,40 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  users: [
-    {
-      id: 1,
-      fio: 'test name',
-      username: 'testname',
-      password: 'test',
-      post: 'Инженер',
-      roles: ['админ']
-    },
-    {
-      id: 2,
-      fio: 'Королев Сергей Павлович',
-      username: 'korolev',
-      password: '111',
-      post: 'главный конструктор',
-      roles: ['админ', 'главный конструктор']
-    },
-    {
-      id: 3,
-      fio: 'Билл Гейтс',
-      username: 'billgates',
-      password: '111',
-      post: 'Инженер',
-      roles: ['пользователь']
-    },
-    {
-      id: 4,
-      fio: 'Неделин Митрофан',
-      username: 'nedelin',
-      password: '111',
-      post: 'руководитель работ',
-      roles: ['руководитель']
-    },
-  ],
   isAuth: false,
   user: {}
 };
@@ -53,22 +19,12 @@ export const authSlice = createSlice({
   initialState,
   reducers: {
     logIn : (state, { payload }) => {
-      const { username, password } = payload;
-      if (checkUser(state.users, username, password)) {
-        const user = state.users.find((item) => item.username === username);
-        return {
-          ...state,
-          isAuth: true,
-          user
-        }
-      }
-      return state;  
+      state.isAuth = true;
+      state.user = payload
     },
     logOut : (state) => {
-      return {
-        ...state,
-        isAuth: false,
-      }  
+      state.isAuth = false;
+      state.user = {};
     },
     addUser : (state, { payload }) => {
       const { users } = state;

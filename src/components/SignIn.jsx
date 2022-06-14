@@ -29,21 +29,19 @@ export default function SignIn() {
       username: formData.get('username'),
       password: formData.get('password'),
     };
-    // console.log(data)
-    // const url = apiRoutes['login']();
-    // try {
-    //   const response = await axios({
-    //     method: 'post',
-    //     url,
-    //     data: formData,
-    //   });
-    //   console.log(response);
-    // } catch(err) {
-    //   console.log(err);
-    // }
+    const url = apiRoutes('login')
+    try {
+      const response = await axios.post(url, payload)
+      const user = response.data;
+      if (user.id) {
+        dispatch(logIn(user));
+      }
+    } catch(err) {
+      console.log(err);
+    }
    
-    dispatch(logIn(payload));
   };
+
   if(auth.isAuth) {
     navigate('/main');
   }

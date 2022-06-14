@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { useDispatch } from 'react-redux';
+import  React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
@@ -9,6 +9,9 @@ import Divider from '@mui/material/Divider';
 import { openDialog } from '../reducers/uiReducer';
 
 export default function ContextMenu( props ) {
+  const { selectedOperation } = useSelector(state => state.ui);
+  const { active, id } = selectedOperation;
+
   const {
     contextMenu,
     handleClose,
@@ -37,17 +40,17 @@ export default function ContextMenu( props ) {
             : undefined
         }
       >
-        <MenuItem onClick={() => {
+        <MenuItem  disabled={!active} onClick={() => {
           handleRunOperation();
           handleClose();
         }}>
           <PlayCircleIcon color='secondary' sx={{mr:2}}/>
           Запустить
         </MenuItem>
-        <MenuItem onClick={() => {
+        <MenuItem disabled={!active} onClick={() => {
           handleStopOperation();
           handleClose();
-          dispatch(openDialog({ dialogName: 'guides'}))
+          dispatch(openDialog({ dialogName: 'guides', data: { id } }))
         }}>
           <StopCircleIcon color='error' sx={{mr:2}}/>
           Остановить

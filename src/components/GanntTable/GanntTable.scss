@@ -3,15 +3,18 @@
   position: relative;
   width: 100%;
   min-height:700px;
-  overflow:auto;
+  max-height: 700px;
+  overflow: scroll;
 }
 .gannt__table {
+  max-height: 100%;
+  border: 1px solid red;
   font-family: Arial;
   font-size: 14px;
   font-weight: normal;
   color: gray;
   margin: auto;
-	width: 120%;
+	width: 400%;
 	margin-bottom: 20px;
 	border: 1px solid #dddddd;
 	border-collapse: collapse;
@@ -39,6 +42,16 @@
       border-right-color: gray;
     }
   }
+  .origin__task {
+    position: absolute;
+    top:50%;
+    transform: translateY(-50%);
+    height: 30px;
+    border-radius: 6px;
+    box-sizing: border-box;
+    border: 2px dashed #039be5;
+    overflow: hidden;
+  }
   .over__task {
     position: absolute;
     top:50%;
@@ -46,7 +59,7 @@
     height: 30px;
     border-radius: 6px;
     overflow: hidden;
-    background-color: #f44336
+    background-color: #ef5350
   }
   .task {
     position: absolute;
@@ -56,10 +69,15 @@
     border-radius: 6px;
     overflow: hidden;
     background-color: #039be5;
+    &__error {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      left: 3px;
+    }
     &__progress {
       position: absolute;
       height: 100%;
-      background-color: #0277bd;
       transition: width 0.5s linear;
     }
     &__badge {

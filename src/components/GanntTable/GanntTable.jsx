@@ -4,10 +4,12 @@ import axios from 'axios';
 import  TaskTooltip  from '../Tooltip';
 import './GanntTable.scss';
 import store from "../../store";
-import { selectTask, selectOperationId } from "../../reducers/uiReducer";
+import { selectTask, selectOperationId, selectOperation } from "../../reducers/uiReducer";
+import ErrorIcon from '@mui/icons-material/Error';
 import ContexMenu from "../ContexMenu";
 import apiRoutes from '../../routes';
-const cols = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
+
+const cols = Array(80).fill(0);
 
 
 const GanntTable = ({ data }) => {
@@ -40,7 +42,7 @@ const GanntTable = ({ data }) => {
     }
   }
 
-  const handleContextMenu = (id) => (event) => {
+  const handleContextMenu = (id, historyOperation) => (event) => {
     event.preventDefault();
     setContextMenu(
       contextMenu === null
@@ -51,7 +53,8 @@ const GanntTable = ({ data }) => {
         : 
           null,
     );
-    dispatch(selectOperationId(id))
+    dispatch(selectOperationId(id));
+    dispatch(selectOperation(historyOperation));
   };
 
   const handleClose = () => {
@@ -63,7 +66,7 @@ const GanntTable = ({ data }) => {
     return hours * 60 + minutes;
   }
   
-  const calcProgress = (duration, progress) => ((hoursToMinutes(progress) / hoursToMinutes(duration)) * 100);
+  // const calcProgress = (duration, progress) => ((hoursToMinutes(progress) / hoursToMinutes(duration)) * 100);
 
   const minuteToFormat = (minutes) => {
     const mins = minutes % 60;
@@ -75,21 +78,25 @@ const GanntTable = ({ data }) => {
     return (
       data.map((task) => {
         const {
-          id,
+          id_operation,
           duration,
           timeStart,
           description,
           percent,
           id_history,
+          delay,
+          active,
+          delta,
+          status
         } = task;
         return (
-          <tr key={id}>
+          <tr key={id_operation}>
             <td>{description}</td>
             <td>{timeStart}</td>
             <td>{duration}</td>
             {
             cols.map((z, index) => {
-              return buildCol(timeStart, duration, percent, index, id, id_history);
+              return buildCol(timeStart, duration, percent, index, id_operation, id_history, delay, active, delta, status, description);
             })
             }
           </tr>
@@ -98,7 +105,7 @@ const GanntTable = ({ data }) => {
     )
   }
   
-  const buildCol = (timeStart, duration, percent, i, id, id_history) => {
+  const buildCol = (timeStart, duration, percent, i, id, id_history, delay, active, delta, status, description) => {
     const [hourStart, minuteStart] = minuteToFormat(timeStart)
     if (hourStart!= i ) {
       return (
@@ -107,36 +114,44 @@ const GanntTable = ({ data }) => {
     } 
     return (
       <td key={`col${i}`} style={{position:'relative'}}>
-        {buildTask(duration, minuteStart, Number(percent.toFixed(2)), id, id_history)}
+        {buildTask(duration, minuteStart, Number(percent.toFixed(1)), id, id_history, delay, active, delta, status, description)}
       </td>
     );
   }
 
-  const runTask = (id) => () => {
-    store.dispatch(selectTask({ id }));
-  };
-  
-  const buildTask = (duration, minuteStart, percent, id, id_history) => {
+   
+  const buildTask = (duration, minuteStart, percent, id, id_history, delay, active, delta, status, description) => {
     const [hourDuration, minuteDuration] = minuteToFormat(duration);
-    const minuteDurationPer = `${((minuteDuration / 60) * 100) + (hourDuration * 100)}%`;
+    const minuteDurationPer = ((minuteDuration / 60) * 100) + (hourDuration * 100);
+    const secInMin = 3600;
+    const delayPer = (delay / secInMin) * 100;
     const num = `${hourDuration - 1}px`;
-    const width = `calc(${minuteDurationPer} + ${num})`;
-    const leftHint = `calc(${minuteDurationPer} + ${num + 5})`;
-    const overWidth =`${((minuteDuration / 60) * percent) + (hourDuration * percent)}%`
-    const left = `${(minuteStart / 60) * 100}%`;
+    const width = `calc(${minuteDurationPer}% + ${num})`;
+    const delayWidth = `calc(${minuteDurationPer + delayPer}% + ${num})`;
+
+    // const delayWidth = `${((120/60 * 100) + (minuteDuration / 60) * 100 + hourDuration * 100)}%`
+    const left = `${((minuteStart + delta / 60) / 60) * 100}%`;
+    const leftOrigin = `${((minuteStart) / 60) * 100}%`;
+    const widthOrigin = `${minuteDurationPer + (delta / secInMin) * 100}%`
+
     return (
       <TaskTooltip>
         <>
-          {percent > 100 && <div className="over__task"  style={{width: overWidth, left}}></div>}
+          <div className="origin__task"  style={{width: `${minuteDurationPer}%`, leftOrigin}}></div>
+          <div className="over__task"  style={{width: delayWidth, left}}></div>
           <div
             key={`task${id}`}
             className="task"
             style={{width, left}}
-            onContextMenu={handleContextMenu(id_history)}
-            onMo
-          >
-            <div className="task__progress" style={{width: `${percent}%`}}></div>
-            <span className="task__badge">{`${percent < 100 ? percent : 100 }%`}</span>
+            onContextMenu={handleContextMenu(id_history, { id, id_history, delay, active })}
+            title={`${description.slice(0, 100)}...`}
+    
+          > 
+            <div className="task__progress" style={{width: `${percent}%`, background: percent < 100  ? '#0277bd' : '#8bc34a'}}>{}</div>
+            {delay > 0 && <span className="task__error" title="Были ошибки на блоке">
+              <ErrorIcon  sx={{color: '#ffee58'}} />
+            </span>}
+            {duration > 30 && <span className="task__badge">{`${percent < 100 ? percent : 100 }%`}</span>}
           </div> 
           {/* <span className="task__hint" style={{left: leftHint}}></span>  */}
         </>
@@ -150,10 +165,17 @@ const GanntTable = ({ data }) => {
         <table className="gannt__table">
           <thead>
             <tr>
-              <th className="sticky" style={{width: '200px'}}>Операция</th>
+              <th className="sticky" style={{width: '300px'}}>Операция</th>
               <th style={{width: '100px'}}>Время начала</th>
               <th style={{width: '100px'}}>Длительность</th>
-              <th>00.00</th>
+              {
+                cols.map((item, index) => {
+                  return (
+                    <th>{index < 10 ? `0${index}.00`: `${index}.00`}</th>
+                  )
+                })
+              }
+              {/* <th>00.00</th>
               <th>01.00</th>
               <th>02.00</th>
               <th>03.00</th>
@@ -175,7 +197,7 @@ const GanntTable = ({ data }) => {
               <th>20.00</th>
               <th>21.00</th>
               <th>22.00</th>
-              <th>23.00</th>
+              <th>23.00</th> */}
             </tr>
           </thead>
           <tbody>

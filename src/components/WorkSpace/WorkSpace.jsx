@@ -31,6 +31,7 @@ const WorkSpace = () => {
       })
     )
   }
+
   const renderTables = () => {
     const groupedHistoryOperation  = groupBy(historyOperation, (item) => (item.id_block))
     return (
@@ -48,26 +49,9 @@ const WorkSpace = () => {
       return <LaunchSpace />
     }
     return (
-      user.post === 'главный конструктор' ? renderGanntTables() : renderTables()
+      user.post === 'Главный конструктор' ? renderGanntTables() : renderTables()
     )
   }
-
-  // useEffect(() => {
-  //   const delta = 1000;
-  //   const fetchData = async () => {
-  //     try {   
-  //       const url = apiRoutes('getHistoryOperationsByBlock')(3, 1);
-  //       const response = await axios.get(url);
-  //       dispatch(addHistoryOperations(response.data));
-  //     } catch(err) {    
-  //       console.log(err);
-  //     }
-  //   }
-    
-  //   setInterval(() => {
-  //     fetchData();
-  //   }, delta);
-  // }, []);
 
   const handleClose = (dialogName, mode = '', data = '') => () => {
     dispatch(closeDialog({
@@ -88,14 +72,14 @@ const WorkSpace = () => {
   return (
     <>
       <WorkPanel startedLaunch={startedLaunch}/>
-      {/* {user.post === 'главный конструктор' ? renderLaunchWork() : (<WorkSpaceEngeneer />)} */}
+      {/* {user.post === 'Главный конструктор' ? renderLaunchWork() : (<WorkSpaceEngeneer />)} */}
       {renderLaunchWork()}
-      {user.post === 'главный конструктор' && <DetailsDrawer
+      {user.post === 'Главный конструктор' && <DetailsDrawer 
          handleClose={handleClose('detail')}
          handleOpen={handleOpen('detail')}
        />
       }
-      <AddErrorForm /> 
+      {/* <AddErrorForm />  */}
       <ErrorGuide />   
     </>
   )

@@ -214,6 +214,7 @@ export default function BasicTable() {
                         sx={{ '&:hover': {color: '#1de9b6'}}}
                         onClick={(e) => {
                           e.preventDefault();
+                          e.stopPropagation();
                           dispatch(openDialog({dialogName: 'errorGuides', data: {id_operation: row.id}}))
                         }}
                         title="Руководство неисправностей"

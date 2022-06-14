@@ -1,4 +1,5 @@
-import * as React from 'react';
+import  React, {useEffect} from 'react';
+import axios from 'axios';
 import { useSelector, useDispatch } from 'react-redux';
 import Box from '@mui/material/Box';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
@@ -13,6 +14,7 @@ import Button from '@mui/material/Button';
 import TimelapseIcon from '@mui/icons-material/Timelapse';
 import { renderChipStatus } from '../../utils/utils';
 import { minuteToFormatStr } from '../../utils/utils';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
 export default function DetailsDrawer(props) {
 
@@ -20,10 +22,26 @@ export default function DetailsDrawer(props) {
   const historyOperations  = useSelector(state => state.historyOperation);
   const operation = historyOperations.find((historyOperation) => historyOperation.id_history === selectedOperationId);
   const { handleClose, handleOpen } = props;
+  const [operationErrors, setOperationErrors] = React.useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const url = `http://localhost:8081/operations/get-operation-errors/by-history/${selectedOperationId}`   
+        const response = await axios.get(url);
+        console.log(response.data)
+        setOperationErrors(response.data);
+      } catch(err) {    
+        console.log(err);
+      }
+    }
+   fetchData();
+  }, [selectedOperationId]);
+
 
   const list = (anchor) => (
     <Box
-      sx={{ width: 400 }}
+      sx={{ width: 600 }}
       role="presentation"
       onClick={handleClose}
       onKeyDown={handleClose}
@@ -84,7 +102,7 @@ export default function DetailsDrawer(props) {
           <Tooltip title="Задержка">
             <Chip
               avatar={<TimelapseIcon style={{color: '#f44336'}}/>} 
-              label={`${operation?.duration} мин.`}
+              label={`${(operation?.delay / 60).toFixed(0)} мин.`}
               variant="outlined" 
               sx={{ border: 'none', fontWeight: 'bold'}}
             />
@@ -119,8 +137,26 @@ export default function DetailsDrawer(props) {
               Отказы операции
             </Typography>
           </Box>
-        <Tabs />
-        <Button variant="contained" fullWidth sx={{background: '#039be5', mt: 50}}>Продолжить выполнение</Button>
+        
+        {operationErrors.length === 0 ? (<Box
+         sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          mt: 20,
+          gap: 2
+         }}
+        >
+          <ErrorOutlineIcon  sx={{ color: '#e0e0e0'}}/>
+          <Typography
+              variant='h5'
+              sx={{ color: '#e0e0e0'}}
+            >
+            Нет ошибок по операции
+          </Typography>
+        </Box>) :
+        <Tabs  data={operationErrors} />}
+        {/* <Button variant="contained" fullWidth sx={{background: '#039be5', mt: 50}}>Продолжить выполнение</Button> */}
       </Container>
   
     </Box>
@@ -134,7 +170,6 @@ export default function DetailsDrawer(props) {
           <SwipeableDrawer
             anchor={anchor}
             open={detail.open}
-            variant='persistent'
             onClose={handleClose}
             onOpen={handleOpen}
           >
