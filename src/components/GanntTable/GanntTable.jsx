@@ -9,7 +9,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import ContexMenu from "../ContexMenu";
 import apiRoutes from '../../routes';
 
-const cols = Array(80).fill(0);
+const cols = Array(100).fill(0);
 
 
 const GanntTable = ({ data }) => {
@@ -133,7 +133,7 @@ const GanntTable = ({ data }) => {
     const left = `${((minuteStart + delta / 60) / 60) * 100}%`;
     const leftOrigin = `${((minuteStart) / 60) * 100}%`;
     const widthOrigin = `${minuteDurationPer + (delta / secInMin) * 100}%`
-
+    const bgColorTask  = status === "ABORTED" ? '#ef5350' : '#039be5';
     return (
       <TaskTooltip>
         <>
@@ -142,12 +142,13 @@ const GanntTable = ({ data }) => {
           <div
             key={`task${id}`}
             className="task"
-            style={{width, left}}
+            style={{width, left , background: bgColorTask  }}
             onContextMenu={handleContextMenu(id_history, { id, id_history, delay, active })}
             title={`${description.slice(0, 100)}...`}
     
           > 
-            <div className="task__progress" style={{width: `${percent}%`, background: percent < 100  ? '#0277bd' : '#8bc34a'}}>{}</div>
+            {status != 'ABORTED' && <div className="task__progress" style={{width: `${percent}%`, background: percent < 100  ? '#0277bd' : '#8bc34a'}}></div>}
+
             {delay > 0 && <span className="task__error" title="Были ошибки на блоке">
               <ErrorIcon  sx={{color: '#ffee58'}} />
             </span>}

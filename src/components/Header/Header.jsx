@@ -94,9 +94,9 @@ export default function Header() {
               size="large"
               color="inherit"
             >
-              <Badge badgeContent={3} color="error">
+              {/* <Badge badgeContent={3} color="error"> */}
                 <NotificationsIcon />
-              </Badge>
+              {/* </Badge> */}
             </IconButton>
             <IconButton
               size="large"

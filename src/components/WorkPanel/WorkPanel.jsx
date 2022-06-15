@@ -43,6 +43,19 @@ const WorkPanel = () => {
     dispatch(changeBlock((idBlock)));
   };
 
+  const handleStopAllOperationOnBlock = async () => {
+    const url = `http://localhost:8081/manager/stop-work-on-block/${startedLaunch.id}/${idBlockActive}`;
+    try {   
+      if (idBlockActive) {
+        const response = await axios.get(url);
+        alert('Остановлены все операции на выбраном блоке')
+      }   
+    } catch(err) {    
+      console.log(err);
+    }
+
+  }
+
 
   return (
     <>
@@ -107,6 +120,7 @@ const WorkPanel = () => {
           startIcon={<ErrorOutlineIcon />}
           color='error'
           size="small"
+          onClick={handleStopAllOperationOnBlock}
           title="Остановить все операции на блоке"
         >
           Остановить блок
