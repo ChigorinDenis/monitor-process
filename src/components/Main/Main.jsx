@@ -21,6 +21,7 @@ import PlanningSpace from '../PlanningSpace/PlanningSpace';
 import StatisticSpace from '../StatisticSpace/StatisticSpace';
 import AllErrorsGuideTable from '../AllErrorsGuideTable';
 import StatisticOperation from '../StatisticOperation';
+import StatisticErrors from '../StatisticErrors';
 import PersonSpace  from  '../PersonSpace/PersonSpace';
 import { selectTab } from '../../reducers/uiReducer';
 
@@ -39,7 +40,7 @@ const getTab = (name) => {
     work: <WorkSpace />,
     plan: <PlanningSpace />,
     personal: <PersonSpace />,
-    statistic: <AllErrorsGuideTable />
+    statistic: <StatisticOperation />
   };
   return mappingName[name];
 }
