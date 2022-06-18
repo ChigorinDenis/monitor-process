@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from 'axios';
 import  TaskTooltip  from '../Tooltip';
 import './GanntTable.scss';
-import store from "../../store";
-import { selectTask, selectOperationId, selectOperation } from "../../reducers/uiReducer";
+import { selectOperationId, selectOperation } from "../../reducers/uiReducer";
 import ErrorIcon from '@mui/icons-material/Error';
+import SystemMessage from "../SystemMessage";
 import ContexMenu from "../ContexMenu";
 import apiRoutes from '../../routes';
 
@@ -17,12 +17,17 @@ const GanntTable = ({ data }) => {
   const [contextMenu, setContextMenu] = React.useState(null);
   const dispatch = useDispatch();
   const { selectedOperationId } = useSelector(state => state.ui);
+  const { entities, idBlockActive } = useSelector(state => state.blocks);
+  const blockActive = entities.find((f) => f.id === idBlockActive)
+  const [ open, setOpen] = React.useState(false);
+  const [ msgSetting, setMsgSetting] = React.useState({ severity: '', text: ''});
 
   const handleRunOperation = async () => {
     const url = apiRoutes('startHistoryOperation')(selectedOperationId);
     try {
       const response = await axios.post(url);
-      alert(`Запущена операция ${selectedOperationId}`)
+      setMsgSetting({ severity: 'success', text: `Запущена операция ${selectedOperationId} на блоке ${blockActive.name}`});
+      setOpen(true);
     } catch (err) {
       alert(err);
       console.log(err);
@@ -35,7 +40,8 @@ const GanntTable = ({ data }) => {
     }
     try {
       const response = await axios.post(url, data);
-      alert(`Остановлена операция ${selectedOperationId}`)
+      setMsgSetting({ severity: 'error', text: `Остановлена операция ${selectedOperationId} на блоке ${blockActive.name}`});
+      setOpen(true);
     } catch (err) {
       alert(err);
       console.log(err);
@@ -92,8 +98,8 @@ const GanntTable = ({ data }) => {
         return (
           <tr key={id_operation}>
             <td>{description}</td>
-            <td>{timeStart}</td>
-            <td>{duration}</td>
+            <td>{timeStart} мин.</td>
+            <td>{duration} мин.</td>
             {
             cols.map((z, index) => {
               return buildCol(timeStart, duration, percent, index, id_operation, id_history, delay, active, delta, status, description);
@@ -132,12 +138,12 @@ const GanntTable = ({ data }) => {
     // const delayWidth = `${((120/60 * 100) + (minuteDuration / 60) * 100 + hourDuration * 100)}%`
     const left = `${((minuteStart + delta / 60) / 60) * 100}%`;
     const leftOrigin = `${((minuteStart) / 60) * 100}%`;
-    const widthOrigin = `${minuteDurationPer + (delta / secInMin) * 100}%`
+    const isHasError = (delay, color) => (delay > 0 ? '#ffd740' : color);
     const bgColorTask  = status === "ABORTED" ? '#ef5350' : '#039be5';
     return (
       <TaskTooltip>
         <>
-          <div className="origin__task"  style={{width: `${minuteDurationPer}%`, leftOrigin}}></div>
+          <div className="origin__task"  style={{width, left: leftOrigin}}></div>
           <div className="over__task"  style={{width: delayWidth, left}}></div>
           <div
             key={`task${id}`}
@@ -147,14 +153,15 @@ const GanntTable = ({ data }) => {
             title={`${description.slice(0, 100)}...`}
     
           > 
-            {status != 'ABORTED' && <div className="task__progress" style={{width: `${percent}%`, background: percent < 100  ? '#0277bd' : '#8bc34a'}}></div>}
+            {status != 'ABORTED'
+              && <div className="task__progress" style={{width: `${percent}%`, background: percent < 100  ? isHasError(delay,'#0277bd') : isHasError(delay,'#8bc34a')}}></div>}
 
-            {delay > 0 && <span className="task__error" title="Были ошибки на блоке">
-              <ErrorIcon  sx={{color: '#ffee58'}} />
-            </span>}
+            {/* {delay > 0 && <span className="task__error" title="Были ошибки на блоке">
+              <ErrorIcon  sx={{color: '#cfd8dc'}} />
+            </span>} */}
             {duration > 30 && <span className="task__badge">{`${percent < 100 ? percent : 100 }%`}</span>}
           </div> 
-          {/* <span className="task__hint" style={{left: leftHint}}></span>  */}
+          
         </>
       </TaskTooltip>
     );
@@ -176,29 +183,6 @@ const GanntTable = ({ data }) => {
                   )
                 })
               }
-              {/* <th>00.00</th>
-              <th>01.00</th>
-              <th>02.00</th>
-              <th>03.00</th>
-              <th>04.00</th>
-              <th>05.00</th>
-              <th>06.00</th>
-              <th>07.00</th>
-              <th>08.00</th>
-              <th>09.00</th>
-              <th>10.00</th>
-              <th>11.00</th>
-              <th>12.00</th>
-              <th>14.00</th>
-              <th>15.00</th>
-              <th>16.00</th>
-              <th>17.00</th>
-              <th>18.00</th>
-              <th>19.00</th>
-              <th>20.00</th>
-              <th>21.00</th>
-              <th>22.00</th>
-              <th>23.00</th> */}
             </tr>
           </thead>
           <tbody>
@@ -211,6 +195,12 @@ const GanntTable = ({ data }) => {
         handleClose={handleClose}
         handleRunOperation={handleRunOperation}
         handleStopOperation={handleStopOperation}
+      />
+      <SystemMessage
+        open={open}
+        setOpen={setOpen}
+        severity={msgSetting.severity}
+        text={msgSetting.text}
       />
     </>
     

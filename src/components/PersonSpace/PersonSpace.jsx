@@ -104,10 +104,10 @@ const PersonalSpace = () => {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>ФИО</TableCell>
-              <TableCell>Имя Пользователя</TableCell>
-              <TableCell>Должность</TableCell>
-              <TableCell>Роли</TableCell>
+              <TableCell><b>ФИО</b></TableCell>
+              <TableCell><b>Имя Пользователя</b></TableCell>
+              <TableCell><b>Должность</b></TableCell>
+              <TableCell><b>Роли</b></TableCell>
               <TableCell />
             </TableRow>
           </TableHead>

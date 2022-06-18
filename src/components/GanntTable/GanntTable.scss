@@ -30,16 +30,33 @@
     &:nth-child(n+4) {
       text-align: left;
     }
+    &:nth-child(1) {
+    }
+    &:nth-child(2) {
+      
+    }
     &:nth-child(3) {
-      border-right-color: gray;
+      border-right-width: 2px;
     }
   }
   td {
-    border: 1px solid #dddddd;
+    border: 1px dashed #dddddd;
     padding: 5px;
     height: 30px;
+    &:nth-child(1) {
+      border-style: solid;
+      border-width: 2px;
+      padding-left: 10px;
+    }
+    &:nth-child(2) {
+      border-style: solid;
+      border-width: 2px;
+      text-align: center;
+    }
     &:nth-child(3) {
-      border-right-color: gray;
+      border-style: solid;
+      border-right-width: 2px;
+      text-align: center;
     }
   }
   .origin__task {

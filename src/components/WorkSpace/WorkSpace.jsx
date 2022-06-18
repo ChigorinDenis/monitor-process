@@ -15,7 +15,8 @@ import ErrorGuide from "../ErrorGuide";
 
 
 const WorkSpace = () => {
-  const { user } = useSelector(state => state.auth);
+  const { user, isAuth } = useSelector(state => state.auth);
+  const roles = isAuth ? user.roles.map((role) => (role.name)) : [];
   const historyOperation = useSelector((state) => state.historyOperation);
   const { startedLaunch } = useSelector((state) => state.ui);
   const { idBlockActive } = useSelector((state) => state.blocks);
@@ -49,7 +50,7 @@ const WorkSpace = () => {
       return <LaunchSpace />
     }
     return (
-      user.post === 'Главный конструктор' ? renderGanntTables() : renderTables()
+      roles.includes('CONSTRUCTOR') ||  roles.includes('MANAGER')  ? renderGanntTables() : renderTables()
     )
   }
 
@@ -74,7 +75,7 @@ const WorkSpace = () => {
       <WorkPanel startedLaunch={startedLaunch}/>
       {/* {user.post === 'Главный конструктор' ? renderLaunchWork() : (<WorkSpaceEngeneer />)} */}
       {renderLaunchWork()}
-      {user.post === 'Главный конструктор' && <DetailsDrawer 
+      {(roles.includes('CONSTRUCTOR') || roles.includes('MANAGER')) && <DetailsDrawer 
          handleClose={handleClose('detail')}
          handleOpen={handleOpen('detail')}
        />

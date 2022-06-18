@@ -16,6 +16,7 @@ import { addLaunches } from '../reducers/launchReducer';
 import { startLaunch } from '../reducers/uiReducer';
 import { fetchBlocksByLaunch } from '../reducers/blockReducer';
 import { addHistoryOperations } from '../reducers/historyOperationReducer';
+import { format } from 'date-fns'
 import apiRoutes from '../routes';
 
 
@@ -46,10 +47,10 @@ const LaunchSpace = () => {
       <Table stickyHeader sx={{ minWidth: 650, width: '100%' }}>
         <TableHead>
           <TableRow>
-            <TableCell>Название</TableCell>
-            <TableCell>Миссия</TableCell>
-            <TableCell>Дата</TableCell>
-            <TableCell>Статус</TableCell>
+            <TableCell><b>Название</b></TableCell>
+            <TableCell><b>Миссия</b></TableCell>
+            <TableCell><b>Дата начала</b></TableCell>
+            <TableCell><b>Время начала</b></TableCell>
             <TableCell />
           </TableRow>
         </TableHead>
@@ -61,8 +62,8 @@ const LaunchSpace = () => {
             > 
               <TableCell>{row.name}</TableCell>
               <TableCell>{row.missionNumber}</TableCell>
-              <TableCell>{row.testStartDate}</TableCell>
-              <TableCell>{row.duration}</TableCell>
+              <TableCell>{format(new Date(row.testStartDate), 'dd.MM.yyyy')}</TableCell>
+              <TableCell>{format(new Date(row.testStartDate), 'hh:mm')}</TableCell>
               <TableCell align='right'>
                 <Button 
                   variant="outlined"

@@ -24,6 +24,7 @@ import StatisticOperation from '../StatisticOperation';
 import StatisticErrors from '../StatisticErrors';
 import PersonSpace  from  '../PersonSpace/PersonSpace';
 import { selectTab } from '../../reducers/uiReducer';
+import { useEffect } from 'react';
 
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -66,6 +67,19 @@ const listCostructor = [
     icon: (props) => <BarChartIcon {...props} />,
   }
 ];
+const listManager = [
+  {
+    name: 'Испытания',
+    tabName: 'work',
+    icon: (props) => <RocketIcon {...props} />,
+  },
+  {
+    name: 'Статистика',
+    tabName: 'statistic',
+    icon: (props) => <BarChartIcon {...props} />,
+  }
+];
+
 const listEngineer = [
   {
     name: 'Испытания',
@@ -76,8 +90,21 @@ const listEngineer = [
 
 export default function Main() {
   const { selectedTab } = useSelector(state => state.ui);
-  const { user } =  useSelector(state => state.auth);
-  const list = user.post === 'Главный конструктор' ? listCostructor: listEngineer;
+  const { user, isAuth } =  useSelector(state => state.auth);
+  const roles = isAuth ? user.roles.map((role) => (role.name)) : [];
+  // let list;
+  // console.log('AUTH', isAuth)
+  // switch (roles) {
+  //   case roles.includes('CONSTRUCTOR'):
+  //     list = listCostructor;
+  //   case roles.includes('MANAGAGER'):
+  //     list = listManager;
+  //   case roles.includes('MANAGAGER'):
+  //     list = listEngineer;
+  //   default:
+  //     list = listCostructor
+  // }
+
   const dispatch = useDispatch();
   const handleTab = (name) => () => {
     dispatch(selectTab(name));
@@ -129,7 +156,9 @@ export default function Main() {
             </Paper>
             <hr />
             <List>
-              {list.map(ListItem)}
+              {roles.includes('CONSTRUCTOR') && listCostructor.map(ListItem)}
+              {roles.includes('MANAGER') && listManager.map(ListItem)}
+              {roles.includes('ENGINEER') && listEngineer.map(ListItem)}
             </List>
             <Outlet /> 
           </Item>

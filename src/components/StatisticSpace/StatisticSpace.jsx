@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
-import DialogTitle from '@mui/material/DialogTitle';
-import Dialog from '@mui/material/Dialog';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -10,7 +8,15 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-
+import {
+  BarChart,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  Bar
+} from 'recharts'
 import Container from '@mui/material/Container';
 
 
@@ -36,6 +42,15 @@ function  StatistiSpace() {
   return (
     
       <Container component="main">
+        <BarChart width={730} height={250} data={statistics}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="id" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="numOperations" fill="#8884d8" />
+          <Bar dataKey="numErrors" fill="#82ca9d" />
+       </BarChart>
       <TableContainer component={Paper} sx={{fontSize: '8px'}}>
         <Table sx={{fontSize: '8px' }}>
           <TableHead>

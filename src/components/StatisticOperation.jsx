@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
+import { Box } from '@material-ui/core';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -12,7 +13,17 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 
 import Container from '@mui/material/Container';
-
+import {
+  BarChart,
+  LineChart, 
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+  Bar
+} from 'recharts'
 
 
 function  StatisticOperation() {
@@ -36,8 +47,32 @@ function  StatisticOperation() {
   return (
     
       <Container component="main">
-      <TableContainer component={Paper} sx={{fontSize: '8px'}}>
-        <Table sx={{fontSize: '8px' }}>
+        <Box
+          sx={{ display: 'flex'}}
+        >
+          <BarChart width={500} height={250} data={statistics}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="id" />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="numOperations" fill="#039be5" label="sss"/>
+          <Bar dataKey="numErrors"  fill="#ef5350" />
+       </BarChart>
+       <LineChart width={500} height={250} data={statistics}
+        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis dataKey="id" />
+        <YAxis />
+        <Tooltip />
+        <Legend />
+        <Line type="monotone" dataKey="frequency" stroke="#8884d8" />
+        <Line type="monotone" dataKey="probability" stroke="#82ca9d" />
+      </LineChart>
+        </Box>
+        
+      <TableContainer component={Paper}  sx={{ fontSize: '8px', maxHeight:'70vh', overflowY: 'scroll'}}>
+        <Table sx={{fontSize: '8px' }}  stickyHeader >
           <TableHead>
             <TableRow>
               <TableCell><b>Операция</b></TableCell>

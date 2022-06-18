@@ -9,10 +9,12 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import StopCircleIcon from '@mui/icons-material/StopCircle';
 import CircularProgress from '@mui/material/CircularProgress';
 import Chip from '@mui/material/Chip';
 import IconButton from '@material-ui/core/IconButton';
+import { selectOperationId } from "../reducers/uiReducer";
 import apiRoutes from '../routes';
 import { minuteToFormatStr } from '../utils/utils';
 import { renderChipStatus } from '../utils/utils';
@@ -71,11 +73,12 @@ const WorkSpaceEngeneer = ({data}) => {
                   duration,
                   status,
                   percent,
-                  active
+                  active,
+                  delay
                 } = historyOperation;
                 return (
                   <TableRow key={id_history}>
-                    <TableCell>{description}</TableCell>
+                    <TableCell style={{ width: '500px'}}>{description}</TableCell>
                     <TableCell>{minuteToFormatStr(timeStart)}</TableCell>
                     <TableCell>{minuteToFormatStr(duration)}</TableCell>
                     <TableCell>{renderChipStatus(status)}</TableCell>
@@ -85,20 +88,20 @@ const WorkSpaceEngeneer = ({data}) => {
                       </TableCell>
                     <TableCell>
                       
-                      <PlayArrowIcon
-                      sx={{mr:2, cursor: 'pointer',}}
-                      
-                      color='error'
-                      onClick={handleRunOperation(id_history)}
-                    />
-                      <StopCircleIcon
+                      {active && <PlayCircleIcon
+                        sx={{mr:2, cursor: 'pointer',}}
+                        color='error'
+                        onClick={handleRunOperation(id_history)}
+                      />}
+                      {active && <StopCircleIcon
                         sx={{ cursor: 'pointer'}}
                         color='secondary'
                         onClick={() => {
                           handleStopOperation(id_history)();
+                          dispatch(selectOperationId(id_history));
                           dispatch(openDialog({ dialogName: 'guides'}))
                         }}
-                      />
+                      />}
                     </TableCell>
                   </TableRow>
                 )
