@@ -11,6 +11,8 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import AllErrorsGuideTable from "../AllErrorsGuideTable";
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import { logOut } from '../../reducers/authReducer';
 
@@ -19,6 +21,7 @@ export default function Header() {
   const auth = useSelector(state => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [ openGuide, setOpenGuide] = React.useState(false);
   useEffect(() => {
     if (!auth.isAuth) {
       navigate('/');
@@ -93,9 +96,13 @@ export default function Header() {
             <IconButton
               size="large"
               color="inherit"
+              title='Руководство по ошибкам'
+              onClick={() => {
+                setOpenGuide(true);
+              }}
             >
               {/* <Badge badgeContent={3} color="error"> */}
-                <NotificationsIcon />
+                <LibraryBooksIcon />
               {/* </Badge> */}
             </IconButton>
             <IconButton
@@ -125,6 +132,7 @@ export default function Header() {
         </Toolbar>
       </AppBar>
       {renderMenu}
+      <AllErrorsGuideTable open={openGuide} setOpen={setOpenGuide} />
     </Box>
   );
 }

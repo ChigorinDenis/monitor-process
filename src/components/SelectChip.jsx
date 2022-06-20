@@ -23,7 +23,7 @@ const valueToName = {
   ADMIN: 'админ',
   CONSTRUCTOR: 'главный конструктор',
   MANAGER: 'руководитель',
-  ENGINEER: 'пользователь',
+  ENGINEER: 'инженер',
 };
 
 

@@ -53,7 +53,7 @@ const PersonalSpace = () => {
     ADMIN: 'админ',
     CONSTRUCTOR: 'главный конструктор',
     MANAGER: 'руководитель',
-    ENGINEER: 'пользователь',
+    ENGINEER: 'инженеп',
   };
 
   const renderChip = (role) => {
@@ -63,7 +63,7 @@ const PersonalSpace = () => {
         <Chip label={name} color="error" variant="outlined" />
       );
     }
-    if (name === 'пользователь') {
+    if (name === 'инженер') {
       return (
         <Chip label={name} color="secondary" variant="outlined" />
         

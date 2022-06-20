@@ -6,6 +6,7 @@ import GanntTable from "../GanntTable/GanntTable";
 import DetailsDrawer from "../DetailsDrawer/DetailsDrawer";
 import WorkSpaceEngeneer from "../WorkSpaceEngeneer";
 import AddErrorForm from "../AddErrorForm";
+import AllErrorsGuideTable from "../AllErrorsGuideTable";
 import LaunchSpace from "../LaunchSpace";
 import apiRoutes from '../../routes';
 import { addHistoryOperations } from "../../reducers/historyOperationReducer";
@@ -80,7 +81,7 @@ const WorkSpace = () => {
          handleOpen={handleOpen('detail')}
        />
       }
-      {/* <AddErrorForm />  */}
+      <AllErrorsGuideTable />
       <ErrorGuide />   
     </>
   )

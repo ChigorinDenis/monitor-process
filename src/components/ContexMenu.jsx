@@ -10,7 +10,7 @@ import { openDialog } from '../reducers/uiReducer';
 
 export default function ContextMenu( props ) {
   const { selectedOperation } = useSelector(state => state.ui);
-  const { active, id } = selectedOperation;
+  const { active, status, id } = selectedOperation;
 
   const {
     contextMenu,
@@ -47,7 +47,7 @@ export default function ContextMenu( props ) {
           <PlayCircleIcon color='secondary' sx={{mr:2}}/>
           Запустить
         </MenuItem>
-        <MenuItem disabled={!active} onClick={() => {
+        <MenuItem disabled={!active || status === 'CREATED' || status === 'STOPPED'} onClick={() => {
           handleStopOperation();
           handleClose();
           dispatch(openDialog({ dialogName: 'guides', data: { id } }))

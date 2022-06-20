@@ -71,6 +71,7 @@ export default function SignIn() {
               label="Имя пользователя"
               name="username"
               autoComplete="username"
+              defaultValue={'korolev'}
               autoFocus
             />
             <TextField
@@ -80,6 +81,7 @@ export default function SignIn() {
               name="password"
               label="Пароль"
               type="password"
+              defaultValue={'111'}
               autoComplete="current-password"
             />
             <FormControlLabel

@@ -11,6 +11,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import { format } from 'date-fns';
 
 
 function TabPanel(props) {
@@ -54,7 +55,7 @@ const Table1 = ({ data }) => {
             <TableRow>
               <TableCell>Название</TableCell>
               <TableCell>Описание</TableCell>
-              <TableCell>Время регисрации</TableCell>
+              <TableCell>Время</TableCell>
               <TableCell>Решение</TableCell>
               <TableCell>Статус</TableCell>
               <TableCell>Работник</TableCell>
@@ -66,7 +67,6 @@ const Table1 = ({ data }) => {
                 id,
                 name,
                 status,
-                detectionTime,
                 info,
                 solution,
                 historyOperation
@@ -75,9 +75,9 @@ const Table1 = ({ data }) => {
                 <TableRow key={id}>
                   <TableCell>{name}</TableCell>
                   <TableCell>{info}</TableCell>
-                  <TableCell>{historyOperation.timeActual.slice(0,10)}</TableCell>
-                  <TableCell>{status}</TableCell>
+                  <TableCell>{format(new Date(historyOperation.timeActual), 'HH:mm')}</TableCell>
                   <TableCell>{solution}</TableCell>
+                  <TableCell>{status}</TableCell>
                   <TableCell>{historyOperation?.user?.fio}</TableCell>
                 </TableRow>
               )

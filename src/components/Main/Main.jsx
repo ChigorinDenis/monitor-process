@@ -41,7 +41,7 @@ const getTab = (name) => {
     work: <WorkSpace />,
     plan: <PlanningSpace />,
     personal: <PersonSpace />,
-    statistic: <StatisticOperation />
+    statistic: <StatisticSpace />
   };
   return mappingName[name];
 }
@@ -92,18 +92,6 @@ export default function Main() {
   const { selectedTab } = useSelector(state => state.ui);
   const { user, isAuth } =  useSelector(state => state.auth);
   const roles = isAuth ? user.roles.map((role) => (role.name)) : [];
-  // let list;
-  // console.log('AUTH', isAuth)
-  // switch (roles) {
-  //   case roles.includes('CONSTRUCTOR'):
-  //     list = listCostructor;
-  //   case roles.includes('MANAGAGER'):
-  //     list = listManager;
-  //   case roles.includes('MANAGAGER'):
-  //     list = listEngineer;
-  //   default:
-  //     list = listCostructor
-  // }
 
   const dispatch = useDispatch();
   const handleTab = (name) => () => {

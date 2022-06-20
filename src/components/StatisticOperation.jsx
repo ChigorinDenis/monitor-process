@@ -65,13 +65,13 @@ function  StatisticOperation() {
         <XAxis dataKey="id" />
         <YAxis />
         <Tooltip />
-        <Legend />
+       
         <Line type="monotone" dataKey="frequency" stroke="#8884d8" />
         <Line type="monotone" dataKey="probability" stroke="#82ca9d" />
       </LineChart>
         </Box>
         
-      <TableContainer component={Paper}  sx={{ fontSize: '8px', maxHeight:'70vh', overflowY: 'scroll'}}>
+      <TableContainer component={Paper}  sx={{ fontSize: '8px', maxHeight:'65vh', overflowY: 'scroll'}}>
         <Table sx={{fontSize: '8px' }}  stickyHeader >
           <TableHead>
             <TableRow>

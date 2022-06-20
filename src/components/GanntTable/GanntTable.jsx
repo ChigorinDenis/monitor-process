@@ -18,12 +18,13 @@ const GanntTable = ({ data }) => {
   const dispatch = useDispatch();
   const { selectedOperationId } = useSelector(state => state.ui);
   const { entities, idBlockActive } = useSelector(state => state.blocks);
+  const { user } = useSelector(state => state.auth);
   const blockActive = entities.find((f) => f.id === idBlockActive)
   const [ open, setOpen] = React.useState(false);
   const [ msgSetting, setMsgSetting] = React.useState({ severity: '', text: ''});
 
   const handleRunOperation = async () => {
-    const url = apiRoutes('startHistoryOperation')(selectedOperationId);
+    const url = apiRoutes('startHistoryOperation')(selectedOperationId, user.id);
     try {
       const response = await axios.post(url);
       setMsgSetting({ severity: 'success', text: `Запущена операция ${selectedOperationId} на блоке ${blockActive.name}`});
@@ -149,7 +150,7 @@ const GanntTable = ({ data }) => {
             key={`task${id}`}
             className="task"
             style={{width, left , background: bgColorTask  }}
-            onContextMenu={handleContextMenu(id_history, { id, id_history, delay, active })}
+            onContextMenu={handleContextMenu(id_history, { id, id_history, delay, active, status })}
             title={`${description.slice(0, 100)}...`}
     
           > 

@@ -13,7 +13,7 @@ import PlayCircleIcon from '@mui/icons-material/PlayCircle';
 import StopCircleIcon from '@mui/icons-material/StopCircle';
 import CircularProgress from '@mui/material/CircularProgress';
 import Chip from '@mui/material/Chip';
-import IconButton from '@material-ui/core/IconButton';
+import Button from '@mui/material/Button';
 import { selectOperationId } from "../reducers/uiReducer";
 import apiRoutes from '../routes';
 import { minuteToFormatStr } from '../utils/utils';
@@ -88,20 +88,31 @@ const WorkSpaceEngeneer = ({data}) => {
                       </TableCell>
                     <TableCell>
                       
-                      {active && <PlayCircleIcon
-                        sx={{mr:2, cursor: 'pointer',}}
-                        color='error'
-                        onClick={handleRunOperation(id_history)}
-                      />}
-                      {active && <StopCircleIcon
-                        sx={{ cursor: 'pointer'}}
+                      <Button
                         color='secondary'
+                        startIcon={<PlayCircleIcon />}
+                        variant='outlined'
+                        onClick={handleRunOperation(id_history)}
+                        disabled={!active || status === 'STOPPED' || status === 'ABORTED'}
+                        sx={{ mr: 2}}
+                        size="small"
+                      >
+                        Запуск
+                      </Button>
+                      <Button
+                        color='error'
+                        startIcon={<StopCircleIcon/>}
+                        variant='outlined'
                         onClick={() => {
                           handleStopOperation(id_history)();
                           dispatch(selectOperationId(id_history));
                           dispatch(openDialog({ dialogName: 'guides'}))
                         }}
-                      />}
+                        disabled={!active || status === 'CREATED' || status === 'STOPPED' || status === 'ABORTED'}
+                        size="small"
+                      >
+                        Стоп
+                      </Button>
                     </TableCell>
                   </TableRow>
                 )

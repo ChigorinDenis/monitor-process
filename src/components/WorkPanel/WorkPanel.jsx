@@ -13,7 +13,8 @@ import apiRoutes from '../../routes';
 const WorkPanel = () => {
   const { entities, idBlockActive } = useSelector((state) => state.blocks);
   const { startedLaunch } = useSelector((state) => state.ui);
-  const { user } = useSelector((state) => state.auth);
+  const { user, isAuth } = useSelector((state) => state.auth);
+  const roles = isAuth ? user.roles.map((role) => (role.name)) : [];
   const dispatch = useDispatch();
   const url = apiRoutes('getHistoryOperationsByLaunch')(startedLaunch.id);
   
@@ -115,15 +116,15 @@ const WorkPanel = () => {
             )
           })}         
         </ToggleButtonGroup>
-        {user.post === 'Главный конструктор' &&<Button
+        {(roles.includes('CONSTRUCTOR') || roles.includes('MANAGER')) &&<Button
           variant="contained"
           startIcon={<ErrorOutlineIcon />}
           color='error'
           size="small"
           onClick={handleStopAllOperationOnBlock}
-          title="Остановить все операции на блоке"
+          title="Остановить все операции"
         >
-          Остановить блок
+          {roles?.includes('CONSTRUCTOR') ? 'Остановить работы' : 'Остановить блок'}
         </Button>}
       </Box>}
  
