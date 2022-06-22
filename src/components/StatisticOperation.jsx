@@ -55,7 +55,7 @@ function  StatisticOperation() {
           <XAxis dataKey="id" />
           <YAxis />
           <Tooltip />
-          <Legend />
+          {/* <Legend /> */}
           <Bar dataKey="numOperations" fill="#039be5" label="sss"/>
           <Bar dataKey="numErrors"  fill="#ef5350" />
        </BarChart>
@@ -75,6 +75,7 @@ function  StatisticOperation() {
         <Table sx={{fontSize: '8px' }}  stickyHeader >
           <TableHead>
             <TableRow>
+              <TableCell><b>Номер</b></TableCell>
               <TableCell><b>Операция</b></TableCell>
               <TableCell><b>Количество испытаний</b></TableCell>
               <TableCell><b>Обнаружено замечаний</b></TableCell>
@@ -96,7 +97,8 @@ function  StatisticOperation() {
                   probability
                 } = row
                 return (
-                  <TableRow key={id}> 
+                  <TableRow key={id}>
+                    <TableCell>{id}</TableCell>
                     <TableCell>{description}</TableCell>
                     <TableCell>{numOperations}</TableCell>
                     <TableCell>{numErrors}</TableCell>

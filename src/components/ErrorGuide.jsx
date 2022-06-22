@@ -10,6 +10,12 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import FormControl from '@mui/material/FormControl';
+import FormLabel from '@mui/material/FormLabel';
+
 import { Box } from '@material-ui/core';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -19,6 +25,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Alert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import apiRoutes from '../routes';
 import Container from '@mui/material/Container';
 import { closeDialog } from '../reducers/uiReducer';
@@ -33,6 +40,7 @@ function ErrorGuide() {
   const { guides } = dialogs;
 
   const [expanded, setExpanded] = React.useState(false);
+  const [guideSelect, setGuideSelect] = React.useState({});
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -44,7 +52,8 @@ function ErrorGuide() {
     const fetchData = async () => {
       try {
        
-        const url = apiRoutes('getErrorGuide')(selectedOperation.id);   
+        const url = apiRoutes('getErrorGuide')(selectedOperation.id);
+    
         const response = await axios.get(url);
         setGuideErrors(response.data);
       } catch(err) {    
@@ -52,7 +61,7 @@ function ErrorGuide() {
       }
     }
    fetchData();
-  }, [selectedOperation]);
+  }, [selectedOperation , guideSelect]);
   
   const handleClose = () => {
     dispatch(closeDialog({dialogName: 'guides' }));
@@ -76,11 +85,18 @@ function ErrorGuide() {
             control
         } = row;
           return (
-            <Accordion expanded={expanded === `panel${id}`} onChange={handleChange(`panel${id}`)} key={id}>
+            
+            <Accordion
+              expanded={expanded === `panel${id}`}
+              onChange={handleChange(`panel${id}`)}
+              key={id}
+              onClick={() => setGuideSelect(row)}
+            >
               <AccordionSummary
                 expandIcon={<ExpandMoreIcon />}
               >
-                <ErrorOutlineIcon color='error' variant='outlined'/>
+               {guideSelect && guideSelect.id === id && <CheckCircleOutlineIcon color='secondary' variant='outlined'/>}
+                
                 <Typography sx={{ml:1, flexShrink: 0 }}>
                   {`${manifestation.slice(0, 30)}...`}
                 </Typography>
@@ -94,11 +110,12 @@ function ErrorGuide() {
             </Stack>
               </AccordionDetails>
             </Accordion>
+          
           )
         })
       }
       </Box>
-      <AddErrorForm  />
+      <AddErrorForm  guide={guideSelect} />
       </Container>
     </Dialog>
   );

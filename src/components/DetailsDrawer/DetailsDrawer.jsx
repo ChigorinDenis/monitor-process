@@ -36,7 +36,7 @@ export default function DetailsDrawer(props) {
       }
     }
    fetchData();
-  }, [selectedOperationId]);
+  }, [selectedOperationId, operationErrors]);
 
 
   const list = (anchor) => (

@@ -7,6 +7,7 @@ import Box from '@mui/material/Box';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import StatisticOperation from '../StatisticOperation';
+import StatisticError from '../StatisticErrors';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -93,22 +94,21 @@ function  StatistiSpace() {
             textColor="secondary"
             indicatorColor="secondary"
           >
-            <Tab label="Item One" {...a11yProps(0)} />
-            <Tab label="Item Two" {...a11yProps(1)} />
-            <Tab label="Item Three" {...a11yProps(2)} />
+            <Tab label="Статистика ошибок по операциям" {...a11yProps(0)} />
+            <Tab label="Статистика по частоте и вероятности замечания" {...a11yProps(1)} />
+          
           </Tabs>
           <TabPanel value={value} index={0}>
             <StatisticOperation />
           </TabPanel>
           <TabPanel value={value} index={1}>
-              <BarChart width={730} height={250} data={statistics}>
+              {/* <BarChart width={730} height={250} data={statistics}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="id" />
               <YAxis />
               <Tooltip />
-              <Legend />
-              <Bar dataKey="numOperations" fill="#8884d8" />
-              <Bar dataKey="numErrors" fill="#82ca9d" />
+              <Bar dataKey="numOperations" fill="#8884d8"  label=" Операция"/>
+              <Bar dataKey="numErrors" fill="#82ca9d"  label=" Ошибки"/>
           </BarChart>
           <TableContainer component={Paper} sx={{ fontSize: '8px', maxHeight:'65vh', overflowY: 'scroll'}}>
             <Table sx={{fontSize: '8px' }}>
@@ -142,11 +142,10 @@ function  StatistiSpace() {
                 }
               </TableBody>
             </Table>
-          </TableContainer> 
+          </TableContainer>  */}
+          <StatisticError />
           </TabPanel>
-          <TabPanel value={value} index={2}>
-            Item Three
-          </TabPanel>
+          
         </Box>
      
   );

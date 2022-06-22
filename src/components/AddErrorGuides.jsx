@@ -29,6 +29,7 @@ function AddErrorGuides(props) {
       search: data.get('search'),
       removal: data.get('removal'),
       control: data.get('control'),
+      doc: data.get('doc'),
     };
     const url = apiRoutes('addNewErrorGuide')(dialogs?.errorGuides?.data?.id_operation);
     try {
@@ -97,6 +98,14 @@ function AddErrorGuides(props) {
                   minRows={2}
                   label="Контроль"
                   name="control"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  label="Ссылка на документ"
+                  name="doc"
                 />
               </Grid>
             </Grid>

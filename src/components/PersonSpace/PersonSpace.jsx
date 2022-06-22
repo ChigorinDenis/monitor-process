@@ -53,7 +53,7 @@ const PersonalSpace = () => {
     ADMIN: 'админ',
     CONSTRUCTOR: 'главный конструктор',
     MANAGER: 'руководитель',
-    ENGINEER: 'инженеп',
+    ENGINEER: 'инженер',
   };
 
   const renderChip = (role) => {

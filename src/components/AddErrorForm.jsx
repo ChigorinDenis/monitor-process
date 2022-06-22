@@ -17,7 +17,7 @@ function AddErrorForm(props) {
   const dispatch = useDispatch()
   const { dialogs, selectedOperation } = useSelector(state => state.ui);
   const { operation } = dialogs;
-  const { onClose, open } = props;
+  const { guide } = props;
 
   const handleClose = () => {
     dispatch(closeDialog({dialogName: 'guides' }));
@@ -43,18 +43,7 @@ function AddErrorForm(props) {
     handleClose();
   };
   return (
-    // <Dialog onClose={handleClose} open={true}>
-    //   <DialogTitle>{operation.mode === 'add' ? 'Добавить операцию': ' Редактировать операцию'}</DialogTitle>
-    //   <Container component="main" maxWidth="xs">
-    //     <CssBaseline />
-        // <Box
-        //   sx={{
-        //     marginTop: 2,
-        //     display: 'flex',
-        //     flexDirection: 'column',
-        //     alignItems: 'center',
-        //   }}
-        // >
+
           <Box component="form" noValidate onSubmit={handleSubmit(operation)} sx={{ mt: 1 }}>
             <Grid container spacing={3}>
               <Grid item xs={12} sm={12}>
@@ -62,8 +51,12 @@ function AddErrorForm(props) {
                   name="name"
                   required
                   fullWidth
-                  label="Название ошибки"
                   autoFocus
+                  multiline
+                  maxRows={4}
+                  minRows={2}
+                  placeholder="Название ошибки"
+                  defaultValue={guide.manifestation}
                 />
               </Grid>
               <Grid item xs={12} sm={12}>
@@ -71,10 +64,11 @@ function AddErrorForm(props) {
                   name="info"
                   required
                   fullWidth
-                  label="Описание ошибки"
+                  placeholder="Описание ошибки"
                   multiline
                   maxRows={4}
                   minRows={2}
+                  defaultValue={guide.search}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -84,8 +78,9 @@ function AddErrorForm(props) {
                   multiline
                   maxRows={4}
                   minRows={2}
-                  label="Решение"
+                  placeholder="Решение"
                   name="solution"
+                  defaultValue={guide.removal}
                   sx={{mb: 2}}
                 />
               </Grid>
@@ -100,9 +95,7 @@ function AddErrorForm(props) {
               Добавить
             </Button>
           </Box>
-        // </Box>
-    //   </Container>
-    // </Dialog>
+        
   );
 }
 

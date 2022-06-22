@@ -57,7 +57,6 @@ const Table1 = ({ data }) => {
               <TableCell>Описание</TableCell>
               <TableCell>Время</TableCell>
               <TableCell>Решение</TableCell>
-              <TableCell>Статус</TableCell>
               <TableCell>Работник</TableCell>
             </TableRow>
           </TableHead>
@@ -77,7 +76,6 @@ const Table1 = ({ data }) => {
                   <TableCell>{info}</TableCell>
                   <TableCell>{format(new Date(historyOperation.timeActual), 'HH:mm')}</TableCell>
                   <TableCell>{solution}</TableCell>
-                  <TableCell>{status}</TableCell>
                   <TableCell>{historyOperation?.user?.fio}</TableCell>
                 </TableRow>
               )
