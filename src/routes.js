@@ -26,6 +26,12 @@ export default (name) => {
     getErrorGuide: (id_operation) => ([host, prefix, 'get-error-guides-for-one-operations', id_operation].join('/')),
     editOperation: [host, prefix, 'save-editing-operation'].join('/'),
     login: [host, 'login'].join('/'),
+    statisticOperation: [host, 'operations','get-statistics','by-operations'].join('/'),
+    statisticError: [host, 'operations', 'get-statistics', 'by-errors'].join('/'),
+    getAllErrorGuides : [host, 'constructor','get-error-guides-for-all-operations'].join('/'),
+    stopAllOperationOnBlock: (idLaunch, idBlock) => ([host, 'manager', 'stop-work-on-block', idLaunch, idBlock].join('/')),
+    stopAllOperationOnLaunch: (idLaunch) => ([host, 'constructor', 'stop-work-on-launch', idLaunch].join('/')),
+    getOperationErrors: (idLaunch) => ([host, 'operations', 'get-operation-errors','by-launch', idLaunch].join('/'))
   }
   return paths[name];
 };

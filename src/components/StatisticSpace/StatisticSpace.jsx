@@ -62,7 +62,6 @@ function a11yProps(index) {
 
 function  StatistiSpace() {
   const dispatch = useDispatch()
-  const [statistics, setStatistics] = React.useState([]);
 
   const [value, setValue] = React.useState(0);
 
@@ -70,19 +69,6 @@ function  StatistiSpace() {
     setValue(newValue);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {   
-        const response = await axios.get('http://localhost:8081/operations/get-statistics/by-operations');
-        setStatistics(response.data);
-      } catch(err) {    
-        console.log(err);
-      }
-    }
-   fetchData();
-  }, []);
-  
-  
 
   return (
     
@@ -102,50 +88,8 @@ function  StatistiSpace() {
             <StatisticOperation />
           </TabPanel>
           <TabPanel value={value} index={1}>
-              {/* <BarChart width={730} height={250} data={statistics}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="id" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="numOperations" fill="#8884d8"  label=" Операция"/>
-              <Bar dataKey="numErrors" fill="#82ca9d"  label=" Ошибки"/>
-          </BarChart>
-          <TableContainer component={Paper} sx={{ fontSize: '8px', maxHeight:'65vh', overflowY: 'scroll'}}>
-            <Table sx={{fontSize: '8px' }}>
-              <TableHead>
-                <TableRow>
-                  <TableCell><b>Описание</b></TableCell>
-                  <TableCell><b>Количество Операций</b></TableCell>
-                  <TableCell><b>Количество Ошибок</b></TableCell>
-                  <TableCell><b>Количество Прерываний</b></TableCell>
-                </TableRow>
-              </TableHead> 
-              <TableBody>
-                {
-                  statistics.map((row) => {
-                    const {
-                      id,
-                      description,
-                      numOperations,
-                      numErrors,
-                      numAborted
-                    } = row
-                    return (
-                      <TableRow key={id}> 
-                        <TableCell>{description}</TableCell>
-                        <TableCell>{numOperations}</TableCell>
-                        <TableCell>{numErrors}</TableCell>
-                        <TableCell>{numAborted}</TableCell>        
-                      </TableRow>
-                    )
-                  })
-                }
-              </TableBody>
-            </Table>
-          </TableContainer>  */}
-          <StatisticError />
-          </TabPanel>
-          
+            <StatisticError />
+          </TabPanel> 
         </Box>
      
   );

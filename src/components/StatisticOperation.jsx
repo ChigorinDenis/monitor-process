@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import DialogTitle from '@mui/material/DialogTitle';
 import Dialog from '@mui/material/Dialog';
+import Typography from '@material-ui/core/Typography';
 import { Box } from '@material-ui/core';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -23,7 +24,8 @@ import {
   Tooltip,
   Legend,
   Bar
-} from 'recharts'
+} from 'recharts';
+import routes from  '../routes';
 
 
 function  StatisticOperation() {
@@ -33,7 +35,7 @@ function  StatisticOperation() {
   useEffect(() => {
     const fetchData = async () => {
       try {   
-        const response = await axios.get('http://localhost:8081/operations/get-statistics/by-operations');
+        const response = await axios.get(routes('statisticOperation'));
         setStatistics(response.data);
       } catch(err) {    
         console.log(err);
@@ -48,30 +50,36 @@ function  StatisticOperation() {
     
       <Container component="main">
         <Box
-          sx={{ display: 'flex'}}
+          sx={{ display: 'flex', justifyContent: 'space-between', mb: 2}}
         >
-          <BarChart width={500} height={250} data={statistics}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="id" />
-          <YAxis />
-          <Tooltip />
-          {/* <Legend /> */}
-          <Bar dataKey="numOperations" fill="#039be5" label="sss"/>
-          <Bar dataKey="numErrors"  fill="#ef5350" />
-       </BarChart>
-       <LineChart width={500} height={250} data={statistics}
-        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="id" />
-        <YAxis />
-        <Tooltip />
-       
-        <Line type="monotone" dataKey="frequency" stroke="#8884d8" />
-        <Line type="monotone" dataKey="probability" stroke="#82ca9d" />
-      </LineChart>
+          <div>
+            <BarChart width={500} height={250} data={statistics}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="id" />
+            <YAxis />
+            <Tooltip />
+            {/* <Legend /> */}
+            <Bar dataKey="numOperations" fill="#039be5" label="sss"/>
+            <Bar dataKey="numErrors"  fill="#ef5350" />
+            </BarChart>
+            <Typography variant='h6' align='center'>Количество испытаний и ошибок по операциям</Typography>
+          </div>
+          <div>
+            <LineChart width={500} height={250} data={statistics}
+              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="id" />
+              <YAxis />
+              <Tooltip />
+            
+              <Line type="monotone" dataKey="frequency" stroke="#8884d8" />
+              <Line type="monotone" dataKey="probability" stroke="#82ca9d" />
+            </LineChart>
+            <Typography variant='h6' align='center'>Частота и вероятность замечания</Typography>
+          </div>
         </Box>
         
-      <TableContainer component={Paper}  sx={{ fontSize: '8px', maxHeight:'65vh', overflowY: 'scroll'}}>
+      <TableContainer component={Paper}  sx={{ fontSize: '8px', maxHeight:'50vh', overflowY: 'scroll'}}>
         <Table sx={{fontSize: '8px' }}  stickyHeader >
           <TableHead>
             <TableRow>

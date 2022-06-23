@@ -19,18 +19,21 @@ import apiRoutes from '../routes';
 import { minuteToFormatStr } from '../utils/utils';
 import { renderChipStatus } from '../utils/utils';
 import { openDialog } from '../reducers/uiReducer';
-
+import SystemMessage from "../components/SystemMessage";
 
 
 const WorkSpaceEngeneer = ({data}) => {
   const dispatch = useDispatch();
   // const historyOperations = useSelector(state => state.historyOperation);
+  const [ msgSetting, setMsgSetting] = React.useState({ severity: '', text: ''});
+  const [ open, setOpen] = React.useState(false);
 
   const handleRunOperation = (id) => async () => {
     const url = apiRoutes('startHistoryOperation')(id);
     try {
       const response = await axios.post(url);
-      alert(`Запущена операция ${id}`)
+      setMsgSetting({ severity: 'success', text: `Запущена операция  на блоке ${id}`});
+      setOpen(true);
     } catch (err) {
       alert(err);
       console.log(err);
@@ -43,13 +46,21 @@ const WorkSpaceEngeneer = ({data}) => {
     }
     try {
       const response = await axios.post(url, data);
-      alert(`Остановлена операция ${id}`)
+      setMsgSetting({ severity: 'error', text: `Остановлена операция на блоке ${id}`});
+      setOpen(true);
     } catch (err) {
       alert(err);
       console.log(err);
     }
   }
   return (
+    <> 
+    <SystemMessage
+    open={open}
+    setOpen={setOpen}
+    severity={msgSetting.severity}
+    text={msgSetting.text}
+  />
     <TableContainer component={Paper} sx={{fontSize: '8px', maxHeight: '700px', minHeight: '700px'}}>
         <Table sx={{fontSize: '8px'}} stickyHeader>
           <TableHead>
@@ -118,13 +129,10 @@ const WorkSpaceEngeneer = ({data}) => {
                 )
               })
             }
-          
-      
-        
-       
           </TableBody>
         </Table>
       </TableContainer>
+      </>
   )
 }
 

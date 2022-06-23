@@ -7,6 +7,8 @@ import authReducer from './reducers/authReducer.js';
 import blockReducer from './reducers/blockReducer.js';
 import roleReducer from './reducers/roleReducer';
 import launchReducer from './reducers/launchReducer.js';
+import operationErrorReducer from './reducers/operationErrorReducer.js';
+
 
 const store = configureStore({
   reducer: {
@@ -18,6 +20,7 @@ const store = configureStore({
     auth: authReducer,
     ui: uiReducer,
     launches: launchReducer,
+    operationError: operationErrorReducer
   },
 });
 

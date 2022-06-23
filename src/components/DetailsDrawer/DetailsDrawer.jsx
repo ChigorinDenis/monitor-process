@@ -29,14 +29,13 @@ export default function DetailsDrawer(props) {
       try {
         const url = `http://localhost:8081/operations/get-operation-errors/by-history/${selectedOperationId}`   
         const response = await axios.get(url);
-        console.log(response.data)
         setOperationErrors(response.data);
       } catch(err) {    
         console.log(err);
       }
     }
    fetchData();
-  }, [selectedOperationId, operationErrors]);
+  }, [ operationErrors]);
 
 
   const list = (anchor) => (

@@ -7,8 +7,10 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import { addHistoryOperations } from "../../reducers/historyOperationReducer";
 import { changeBlock, clearBlockEntities } from "../../reducers/blockReducer";
+import { addOperationError } from "../../reducers/operationErrorReducer";
 import { startLaunch } from "../../reducers/uiReducer";
 import apiRoutes from '../../routes';
+import routes from "../../routes";
 
 const WorkPanel = () => {
   const { entities, idBlockActive } = useSelector((state) => state.blocks);
@@ -45,11 +47,25 @@ const WorkPanel = () => {
   };
 
   const handleStopAllOperationOnBlock = async () => {
-    const url = `http://localhost:8081/manager/stop-work-on-block/${startedLaunch.id}/${idBlockActive}`;
+    // const url = `http://localhost:8081/manager/stop-work-on-block/${startedLaunch.id}/${idBlockActive}`;
+    const url = routes('stopAllOperationOnBlock')(startedLaunch.id, idBlockActive)
     try {   
       if (idBlockActive) {
         const response = await axios.get(url);
         alert('Остановлены все операции на выбраном блоке')
+      }   
+    } catch(err) {    
+      console.log(err);
+    }
+
+  }
+  const handleStopAllOperationOnLaunch = async () => {
+    // const url = `http://localhost:8081/manager/stop-work-on-block/${startedLaunch.id}/${idBlockActive}`;
+    const url = routes('stopAllOperationOnLaunch')(startedLaunch.id);
+    try {   
+      if (idBlockActive) {
+        const response = await axios.post(url, {note:"Испытания отменены"});
+        alert('Стоп всех работ по пуску')
       }   
     } catch(err) {    
       console.log(err);
@@ -85,6 +101,7 @@ const WorkPanel = () => {
               onClick={() => {
                 dispatch(startLaunch({ id: null, start: false}));
                 dispatch(clearBlockEntities());
+                dispatch(addOperationError([]));
                 dispatch(changeBlock(''));
               }}
             >
@@ -121,7 +138,13 @@ const WorkPanel = () => {
           startIcon={<ErrorOutlineIcon />}
           color='error'
           size="small"
-          onClick={handleStopAllOperationOnBlock}
+          onClick={() => {
+            if (roles.includes('CONSTRUCTOR')) {
+              handleStopAllOperationOnLaunch();
+              return;
+            }
+            handleStopAllOperationOnBlock()
+          }}
           title="Остановить все операции"
         >
           {roles?.includes('CONSTRUCTOR') ? 'Остановить работы' : 'Остановить блок'}

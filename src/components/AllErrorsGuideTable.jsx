@@ -16,6 +16,7 @@ import Container from '@mui/material/Container';
 import SearchIcon from '@mui/icons-material/Search';
 import InputAdornment from '@mui/material/InputAdornment';
 import Alert from '@mui/material/Alert';
+import routes from '../routes';
 
 
 function  AllErrorsGuideTable(props) {
@@ -28,7 +29,7 @@ function  AllErrorsGuideTable(props) {
   useEffect(() => {
     const fetchData = async () => {
       try {   
-        const response = await axios.get('http://localhost:8081/constructor/get-error-guides-for-all-operations');
+        const response = await axios.get(routes('getAllErrorGuides'));
         setErrorGuides(response.data);
         setFiltered(response.data);
       } catch(err) {    

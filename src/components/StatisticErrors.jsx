@@ -23,7 +23,8 @@ import {
     Bar
   } from 'recharts'
 import Container from '@mui/material/Container';
-
+import routes from  '../routes';
+import { Typography } from '@mui/material';
 
 
 function StatisticErrors() {
@@ -33,7 +34,7 @@ function StatisticErrors() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get('http://localhost:8081/operations/get-statistics/by-errors');
+                const response = await axios.get(routes('statisticError'));
                 setStatistics(response.data);
             } catch (err) {
                 console.log(err);
@@ -48,32 +49,39 @@ function StatisticErrors() {
 
         <Container component="main">
             <Box
-          sx={{ display: 'flex'}}
+          sx={{ display: 'flex', justifyContent: 'space-between', mb: 2}}
         >
-          <BarChart width={500} height={250} data={statistics}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="id" />
-          <YAxis />
-          <Tooltip />
-          {/* <Legend /> */}
-          <Bar dataKey="number" fill="#039be5" label="sss"/>
-
-       </BarChart>
-       <LineChart width={500} height={250} data={statistics}
-        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="id" />
-        <YAxis />
-        <Tooltip />
        
-        <Line type="monotone" dataKey="frequency" stroke="#8884d8" />
-        <Line type="monotone" dataKey="probability" stroke="#82ca9d" />
-      </LineChart>
+            <div>
+                <BarChart width={500} height={200} data={statistics}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="id" />
+                    <YAxis />
+                    <Tooltip />
+                    {/* <Legend /> */}
+                    <Bar dataKey="number" fill="#039be5" label="sss"/>
+                </BarChart>
+                <Typography variant='h6' align='center'>Диаграмма количества ошибок</Typography>
+            </div>
+            <div>
+                <LineChart width={500} height={200} data={statistics}
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="id" />
+                    <YAxis />
+                    <Tooltip />
+                    <Line type="monotone" dataKey="frequency" stroke="#8884d8" />
+                    <Line type="monotone" dataKey="probability" stroke="#82ca9d" />
+                </LineChart>
+                <Typography variant='h6' align='center'>Частота и вероятность появления замечания</Typography>
+        </div>
+      
         </Box>
-            <TableContainer component={Paper} sx={{ fontSize: '8px' }}>
+            <TableContainer component={Paper} sx={{ fontSize: '8px', maxHeight: '400px' }}>
                 <Table sx={{ fontSize: '8px' }}>
                     <TableHead>
                         <TableRow>
+                            <TableCell><b>Номер</b></TableCell>
                             <TableCell><b>Замечание</b></TableCell>
                             <TableCell><b>Количество обнаружений</b></TableCell>
                             <TableCell><b>Частота замечания</b></TableCell>
@@ -92,6 +100,7 @@ function StatisticErrors() {
                                 } = row
                                 return (
                                     <TableRow key={id}>
+                                        <TableCell>{id}</TableCell>
                                         <TableCell>{info}</TableCell>
                                         <TableCell>{number}</TableCell>
                                         <TableCell>{frequency.toFixed(2)}</TableCell>
